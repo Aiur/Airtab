@@ -3,7 +3,12 @@
 <a href="?" onclick="sendUrl('prashant'); return false;">Send URL</a>
 <br />
 <span id="logs">TESTING</span>
-
+<br />
+<br />
+<br />
+<a href="?" onclick="getLast(); return false;">Get Last URLs</a>
+<br />
+<span id="lasturls">Last URLs</span>
 <script>
   var socket = io.connect('http://localhost:8090');
       document.getElementById('logs').innerHTML += "\n" + "Connected!";
@@ -11,8 +16,17 @@
       alert('new url!');
       document.getElementById('logs').innerHTML += "\n" + data.url
   });
-    function sendUrl(url) {
+  socket.on('lastUrls', function(data) {
+    document.getElementById('lasturls').innerHTML = "";
+    for(var i = 0; i < data.urls.length; i++) {
+        document.getElementById('lasturls').innerHTML += "<br>" + data.urls[i];
+    }
+  });
+  function sendUrl(url) {
         socket.emit('newUrl', { url: url });
+    }
+    function getLast() {
+        socket.emit('lastUrls', { });
     }
 </script>
 

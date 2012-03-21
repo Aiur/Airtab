@@ -1,0 +1,19 @@
+<script src="http://localhost:8090/socket.io/socket.io.js"></script>
+
+<a href="?" onclick="sendUrl('prashant'); return false;">Send URL</a>
+<br />
+<span id="logs">TESTING</span>
+
+<script>
+  var socket = io.connect('http://localhost:8090');
+      document.getElementById('logs').innerHTML += "\n" + "Connected!";
+  socket.on('newUrl', function(data) {
+      alert('new url!');
+      document.getElementById('logs').innerHTML += "\n" + data.url
+  });
+    function sendUrl(url) {
+        socket.emit('newUrl', { url: url });
+    }
+</script>
+
+

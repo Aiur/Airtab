@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script>
+      function save() {
+        var select = document.getElementById("mode");
+        localStorage["mode"] = select.children[select.selectedIndex].value;
+      }
+      function restore() {
+        var mode = localStorage["mode"] || 'client';
+        var select = document.getElementById("mode");
+        for (var i = 0; i < select.children.length; i++) {
+          if (select.children[i].value === mode) {
+            select.children[i].selected = true;
+            break;
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+
+    <select id="mode">
+      <option value="server">Server</option>
+      <option value="client">Client</option>
+    </select>
+    <button onclick="save()">Save</button>
+
+    <script>
+        restore();
+    </script>
+  </body>
+</html>

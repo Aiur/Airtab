@@ -1,0 +1,16 @@
+<html>
+  <head>
+  </head>
+  <body>
+
+    <div id="message"></div>
+    <script>
+      chrome.extension.sendRequest({action: "sendTab"}, function(response) {
+        if (response) {
+          var message = document.getElementById('message');
+          message.innerHTML = response.message;
+        }
+      });
+    </script>
+  </body>
+</html>

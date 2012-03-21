@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <script src="http://192.168.1.5:8090/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <script>
+      var socket = io.connect('http://192.168.1.5:8090');
+      var connected = false;
+
+      socket.on('connect', function() {
+        connected = true;
+      });
+
+      socket.on('newUrl', function(data) {
+        if (localStorage['mode'] === 'server') {
+          chrome.tabs.create({'url': data.url});
+        }
+      });
+
+      var selectedTabId = null;
+      chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
+        selectedTabId = tabId;
+      });
+
+      chrome.extension.onRequest.addListener(
+        function(request, sender, sendResponse) {
+          if (request.action === 'sendTab') {
+            if (selectedTabId) {
+              chrome.tabs.get(selectedTabId, function(tab) {
+                if (connected && tab) {
+                  socket.emit('newUrl', {'url': tab.url});
+                  sendResponse({'message': 'sent: ' + tab.url});
+                  } else {
+                    sendResponse({'message': 'not connected or tab undefined'});
+                  }
+              });
+            }
+          }
+      });
+    </script>
+  </body>

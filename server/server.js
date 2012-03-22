@@ -21,8 +21,11 @@ function openUrl(url) {
     lastUrls.pop();
   }
 
-  openurl(url);
-  io.sockets.emit('lastUrls', {urls: lastUrls});
+  try {
+    openurl(url);
+  } catch (err) {
+    console.log('Unable to open url: ' + url);
+  }
 }
 
 

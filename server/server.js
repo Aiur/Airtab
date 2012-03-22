@@ -33,9 +33,6 @@ function openUrl(url) {
 }
 
 
-app.post('/newUrl', function(req, res) {
-  openUrl(req.body.url);
-});
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
@@ -46,6 +43,7 @@ app.get('/client.js', function(req, res) {
   res.sendfile(__dirname + '/client.js');
 });
 app.post('/newUrl', function(req, res) {
+  console.log('NewUrl Posted: ' + req.body.url)
   openUrl(req.body.url);
 });
 

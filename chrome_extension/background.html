@@ -1,80 +1,51 @@
 <html>
   <head>
+    <script src="jquery.js"></script>
   </head>
   <body>
     <script>
       var state = {
         connected: false,
         selectedTabId: null,
-        socketIoScript: null,
-        scriptLoaded: false,
-        socket: null,
+        postUrl: null,
       };
-
-      function init(host, port) {
-        var socket = io.connect(["http://", host, ":", port].join(""));
-        state.socket = socket;
-
-        socket.on("connect", function() {
-          state.connected = true;
-        });
-
-        socket.on("newUrl", function(data) {
-          if (localStorage["mode"] === "server") {
-            chrome.tabs.create({"url": data.url});
-          }
-        });
-      }
 
       chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
         state.selectedTabId = tabId;
       });
 
+      // Listen for the 'sendTab' action from the popup. 
       chrome.extension.onRequest.addListener(
         function(request, sender, sendResponse) {
-          if (!state.scriptLoaded) {
-            return sendResponse({
-              "message": "Failed to load socket.io script, check the options and try again"
-            });
-          }
-
-          if (state.connected && state.selectedTabId && request.action === "sendTab") {
+          if (state.selectedTabId && request.action === "sendTab") {
             chrome.tabs.get(state.selectedTabId, function(tab) {
               if (tab) {
-                state.socket.emit("newUrl", {"url": tab.url});
-                sendResponse({"message": "sent: " + tab.url});
+                $.post(state.postUrl, {'url': tab.url})
+                  .success(function () {
+                    sendResponse({"message": "sent: " + tab.url});
+                  })
+                  .error(function() {
+                    sendResponse({"message": "ajax post failed."});
+                  }); 
               } else {
                 sendResponse({"message": "tab undefined"});
               }
             });
           } else {
-            sendResponse({"message": "not connected to server or invalid tab"});
+            sendResponse({"message": "invalid tab or invalid action"});
           }
       });
 
       function reload() {
-        if (state.socketIoScript) {
-          document.body.removeChild(state.socketIoScript);
-        }
-
         state = {
           connected: false,
           selectedTabId: null,
-          socketIoScript: null,
-          scriptLoaded: false,
+          postUrl: null,
         };
 
-        // Load the socket.io script and call init when ready.
-        var scriptUrl = ["http://", localStorage["host"], ":", localStorage["port"], 
-                         "/socket.io/socket.io.js"].join("");
-        state.socketIoScript = document.createElement("script");
-        state.socketIoScript.src = scriptUrl;
-        state.socketIoScript.onload = function() { 
-          state.scriptLoaded = true;
-          init(localStorage["host"], localStorage["port"]) 
-        };
-
-        document.body.appendChild(state.socketIoScript);
+        state.postUrl = [
+          "http://", localStorage["host"], ":", localStorage["port"], "/newUrl"
+        ].join("");
       }
 
       reload();

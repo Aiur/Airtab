@@ -35,6 +35,9 @@ app.get('/jquery.js', function(req, res) {
 app.get('/client.js', function(req, res) {
   res.sendfile(__dirname + '/client.js');
 });
+app.post('/newUrl', function(req, res) {
+  openUrl(req.body.url);
+});
 
 io.sockets.on('connection', function (socket) {
   socket.on('newUrl', function (data) {

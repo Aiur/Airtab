@@ -11,10 +11,22 @@ var lastUrls = []
 
 // open the URL and store it in the history
 function openUrl(url) {
-  while (lastUrls.length > (URLCOUNT - 1)) {
+  while (lastUrls.length > URLCOUNT) {
     lastUrls.pop()
   }
-  lastUrls.push(url);
+
+  var checkNewUrl = {}
+  for(var i = 0; i < lastUrls.length; i++) {
+    checkNewUrl[lastUrls[i]] = 1;
+  }
+
+  if (!checkNewUrl[url]) {
+    if (lastUrls.length >= URLCOUNT) {
+      lastUrls.pop();
+    }
+    lastUrls.push(url);
+  }
+
   openurl(url);
 }
 
@@ -27,15 +39,6 @@ app.get('/jquery.js', function(req, res) {
 });
 app.get('/client.js', function(req, res) {
   res.sendfile(__dirname + '/client.js');
-});
-
-app.get('/lasturls', function(req, res) {
-  res.send({ urls: lastUrls })
-});
-
-app.post('/', function(req, res){
-  console.log('URL post:' + req.body.url);
-  openUrl(req.body.url);
 });
 
 io.sockets.on('connection', function (socket) {

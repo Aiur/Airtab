@@ -1,10 +1,18 @@
 <html>
     <head>
         <Title>Sup</Title>
+        <style type="text/css">
+            .red {
+                color: red;
+            }
+        </style>
     </head>
     <body>
-        This will be the webserver where you can add more URLs yay!!
 
+        Enter a URL and send it!
+        <br />
+
+        <span id="errors" class="red" style="display: none">Errors here</span>
         <form method="post" action-"/">
             URL : <input id="send_url" type="text" name="url" />
             <input type="submit" value="Send URL" onclick="sendUrl(); return false;" />

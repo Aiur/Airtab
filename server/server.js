@@ -27,7 +27,11 @@ function openUrl(url) {
     lastUrls.push(url);
   }
 
-  openurl(url);
+  try {
+    openurl(url);
+  } catch (err) {
+    console.log('Unable to open url: ' + url);
+  }
 }
 
 

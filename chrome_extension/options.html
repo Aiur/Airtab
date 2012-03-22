@@ -1,28 +1,44 @@
 <html>
   <head>
     <script>
+      function $(id) { return document.getElementById(id); }
+
       function save() {
-        var select = document.getElementById("mode");
+        var select = $("mode");
+        var host = $("host");
+        var port = $("port");
+
         localStorage["mode"] = select.children[select.selectedIndex].value;
+        localStorage["host"] = host.value;
+        localStorage["port"] = port.value;
+        chrome.extension.getBackgroundPage().reload();
       }
+
       function restore() {
-        var mode = localStorage["mode"] || 'client';
-        var select = document.getElementById("mode");
+        var mode = localStorage["mode"] || "client";
+        var select = $("mode");
+        var host = $("host");
+        var port = $("port");
         for (var i = 0; i < select.children.length; i++) {
           if (select.children[i].value === mode) {
             select.children[i].selected = true;
             break;
           }
         }
+
+        host.value = localStorage["host"] || "";
+        port.value = localStorage["port"] || "";
       }
     </script>
   </head>
   <body>
-
     <select id="mode">
       <option value="server">Server</option>
       <option value="client">Client</option>
     </select>
+    <label>Server Host/IP: <input id="host" type="text" /></label>
+    <label>Server Port: <input id="port" type="text" /></label>
+
     <button onclick="save()">Save</button>
 
     <script>

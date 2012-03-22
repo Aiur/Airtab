@@ -1,39 +1,82 @@
 <html>
   <head>
-    <script src="http://192.168.1.5:8090/socket.io/socket.io.js"></script>
   </head>
   <body>
     <script>
-      var socket = io.connect('http://192.168.1.5:8090');
-      var connected = false;
-      var selectedTabId = null;
+      var state = {
+        connected: false,
+        selectedTabId: null,
+        socketIoScript: null,
+        scriptLoaded: false,
+        socket: null,
+      };
 
-      socket.on('connect', function() {
-        connected = true;
-      });
+      function init(host, port) {
+        var socket = io.connect(["http://", host, ":", port].join(""));
+        state.socket = socket;
 
-      socket.on('newUrl', function(data) {
-        if (localStorage['mode'] === 'server') {
-          chrome.tabs.create({'url': data.url});
-        }
-      });
+        socket.on("connect", function() {
+          state.connected = true;
+        });
+
+        socket.on("newUrl", function(data) {
+          if (localStorage["mode"] === "server") {
+            chrome.tabs.create({"url": data.url});
+          }
+        });
+      }
 
       chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
-        selectedTabId = tabId;
+        state.selectedTabId = tabId;
       });
 
       chrome.extension.onRequest.addListener(
         function(request, sender, sendResponse) {
-          if (connected && selectedTabId && request.action === 'sendTab') {
-            chrome.tabs.get(selectedTabId, function(tab) {
-              if (tab) {
-                socket.emit('newUrl', {'url': tab.url});
-                sendResponse({'message': 'sent: ' + tab.url});
-              } else {
-                sendResponse({'message': 'tab undefined'});
-              }
+          if (!state.scriptLoaded) {
+            return sendResponse({
+              "message": "Failed to load socket.io script, check the options and try again"
             });
           }
+
+          if (state.connected && state.selectedTabId && request.action === "sendTab") {
+            chrome.tabs.get(state.selectedTabId, function(tab) {
+              if (tab) {
+                state.socket.emit("newUrl", {"url": tab.url});
+                sendResponse({"message": "sent: " + tab.url});
+              } else {
+                sendResponse({"message": "tab undefined"});
+              }
+            });
+          } else {
+            sendResponse({"message": "not connected to server or invalid tab"});
+          }
       });
+
+      function reload() {
+        if (state.socketIoScript) {
+          document.body.removeChild(state.socketIoScript);
+        }
+
+        state = {
+          connected: false,
+          selectedTabId: null,
+          socketIoScript: null,
+          scriptLoaded: false,
+        };
+
+        // Load the socket.io script and call init when ready.
+        var scriptUrl = ["http://", localStorage["host"], ":", localStorage["port"], 
+                         "/socket.io/socket.io.js"].join("");
+        state.socketIoScript = document.createElement("script");
+        state.socketIoScript.src = scriptUrl;
+        state.socketIoScript.onload = function() { 
+          state.scriptLoaded = true;
+          init(localStorage["host"], localStorage["port"]) 
+        };
+
+        document.body.appendChild(state.socketIoScript);
+      }
+
+      reload();
     </script>
   </body>

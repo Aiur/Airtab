@@ -6,6 +6,7 @@
     <script>
       var socket = io.connect('http://192.168.1.5:8090');
       var connected = false;
+      var selectedTabId = null;
 
       socket.on('connect', function() {
         connected = true;
@@ -17,24 +18,21 @@
         }
       });
 
-      var selectedTabId = null;
       chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
         selectedTabId = tabId;
       });
 
       chrome.extension.onRequest.addListener(
         function(request, sender, sendResponse) {
-          if (request.action === 'sendTab') {
-            if (selectedTabId) {
-              chrome.tabs.get(selectedTabId, function(tab) {
-                if (connected && tab) {
-                  socket.emit('newUrl', {'url': tab.url});
-                  sendResponse({'message': 'sent: ' + tab.url});
-                  } else {
-                    sendResponse({'message': 'not connected or tab undefined'});
-                  }
-              });
-            }
+          if (connected && selectedTabId && request.action === 'sendTab') {
+            chrome.tabs.get(selectedTabId, function(tab) {
+              if (tab) {
+                socket.emit('newUrl', {'url': tab.url});
+                sendResponse({'message': 'sent: ' + tab.url});
+              } else {
+                sendResponse({'message': 'tab undefined'});
+              }
+            });
           }
       });
     </script>

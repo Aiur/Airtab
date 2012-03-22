@@ -9,7 +9,7 @@ function sendExplicitUrl(url) {
 function sendUrl() {
   var url = $("#send_url").val();
   var urlregex = new RegExp(
-        "^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
+        "^(http:\/\/|https:\/\/|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
   if (url && urlregex.test(url)) {
     $("#errors").fadeOut();
     $("#urlControlContainer").removeClass('error');

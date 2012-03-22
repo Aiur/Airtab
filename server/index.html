@@ -1,34 +1,48 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
     <head>
-        <Title>Sup</Title>
+        <Title>Submit Links to Aiur</Title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style type="text/css">
-            .red {
-                color: red;
+            body {
+                padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
             }
         </style>
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     </head>
     <body>
-
-        Enter a URL and send it!
-        <br />
-
-        <span id="errors" class="red" style="display: none">Errors here</span>
-        <form method="post" action-"/">
-            URL : <input id="send_url" type="text" name="url" />
-            <input type="submit" value="Send URL" onclick="sendUrl(); return false;" />
-        </form>
-
-
-        <br />
-        <br />
-        <br />
-        <div id="lastUrls">
-            Loading...
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <span class="brand">Submit Links to Aiur!</span>
+                </div>
+            </div>
         </div>
+        <div class="hero-unit">
+            <h3>Enter a URL to open on Aiur</h3>
+            <p>
+                <div id="urlControlContainer" class="control-group"><div class="controls">
+                <input class="input-xxlarge search-query url_field_width" id="send_url" type="text" name="url" />
+                <a class="btn btn-primary" onclick="sendUrl(); return false;">Send</a>
+                <p>
+                <span id="errors" class="help-inline" style="display:none">Error</span>
+                </p>
+                </div></div>
+            </p>
+        </div>
+        <div class="container">
+            <h2>Recent Links</h2>
 
+            <br />
+            <ul id="lastUrls">
+                Loading recent links...
+            </ul>
+        </div>
 
         <script type="text/javascript" src="/jquery.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/client.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script>
     </body>
 </html>

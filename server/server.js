@@ -4,6 +4,8 @@ var io = require('socket.io').listen(app);
 var openurl = require('openurl').open;
 
 app.listen(8090);
+// bootstrap
+app.use('/bootstrap', express.static(__dirname + '/bootstrap'));
 app.use(express.bodyParser());
 
 var URLCOUNT = 10
@@ -29,6 +31,9 @@ function openUrl(url) {
 }
 
 
+app.post('/newUrl', function(req, res) {
+  openUrl(req.body.url);
+});
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
@@ -41,6 +46,7 @@ app.get('/client.js', function(req, res) {
 app.post('/newUrl', function(req, res) {
   openUrl(req.body.url);
 });
+
 
 io.sockets.on('connection', function (socket) {
   socket.on('newUrl', function (data) {

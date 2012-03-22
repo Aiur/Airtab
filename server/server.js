@@ -28,6 +28,8 @@ function openUrl(url) {
   } catch (err) {
     console.log('Unable to open url: ' + url);
   }
+
+  io.sockets.emit('lastUrls', { urls: lastUrls });
 }
 
 

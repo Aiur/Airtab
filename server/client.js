@@ -9,7 +9,7 @@ function sendExplicitUrl(url) {
 function sendUrl() {
   var url = $("#send_url").val();
   var urlregex = new RegExp(
-        "^(http:\/\/|https:\/\/|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
+        "^(http:\/\/|https:\/\/|ftp:\/\/.){1}([0-9A-Za-z]+\.)");
   if (url && urlregex.test(url)) {
     $("#errors").fadeOut();
     $("#urlControlContainer").removeClass('error');
@@ -19,6 +19,12 @@ function sendUrl() {
     $("#errors").text('Please enter a valid URL, the entered URL was not recognised!');
     $("#errors").fadeIn();
     $("#urlControlContainer").addClass('error');
+  }
+}
+
+function keyDownHandler() {
+  if (window.event.keyCode == 13) {
+    sendUrl();
   }
 }
 

@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <Title>Sup</Title>
+    </head>
+    <body>
+        This will be the webserver where you can add more URLs yay!!
+
+        <form method="post" action-"/">
+            URL : <input type="text" name="url" />
+            <input type="submit" value="Send URL" />
+        </form>
+
+
+        <br />
+        <br />
+        <br />
+        <div id="lastUrls">
+            Loading...
+        </div>
+
+
+        <script type="text/javascript" src="/jquery.js"></script>
+        <script type="text/javascript">
+
+        $(document).ready(function() {
+                $.ajax({
+url: '/lasturls',
+success: function(data) {
+$("#lastUrls").html('');
+for(var i = 0; i < data.urls.length; i++) {
+    $("#lastUrls").append(data.urls[i]);
+    $("#lastUrls").append('<br />');
+}
+    }
+                });
+        });
+        </script>
+    </body>
+</html>

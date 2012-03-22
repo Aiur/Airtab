@@ -1,13 +1,49 @@
-var io = require('socket.io').listen(8090);
+var express = require("express");
+var app = express.createServer();
+var io = require('socket.io').listen(app);
+var openurl = require('openurl').open;
 
+app.listen(8090);
+app.use(express.bodyParser());
+
+var URLCOUNT = 10
 var lastUrls = []
 
+// open the URL and store it in the history
+function openUrl(url) {
+  while (lastUrls.length > (URLCOUNT - 1)) {
+    lastUrls.pop()
+  }
+  lastUrls.push(url);
+  openurl(url);
+}
+
+
+app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
+app.get('/jquery.js', function(req, res) {
+  res.sendfile(__dirname + '/jquery-1.7.2.js');
+});
+
+app.get('/lasturls', function(req, res) {
+  res.send({ urls: lastUrls })
+});
+
+app.post('/', function(req, res){
+  console.log('PRASHANT LOG');
+  console.log(req);
+  console.log(req.body);
+  res.send(req.body);
+  console.log('URL post:' + req.body.url);
+  openUrl(req.body.url);
+});
+
 io.sockets.on('connection', function (socket) {
+  console.log('got a new connection');
   socket.on('newUrl', function (data) {
     console.log(data);
-    io.sockets.emit('newUrl', data);
-    if (lastUrls.length > 9) lastUrls.length = 9;
-    lastUrls.push(data.url);
+    openUrl(data.url);
   });
   socket.on('lastUrls', function(data) {
     console.log('lastURL request');

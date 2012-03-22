@@ -11,23 +11,18 @@ var lastUrls = []
 
 // open the URL and store it in the history
 function openUrl(url) {
+  var index = lastUrls.indexOf(url);
+  if (index > -1) {
+    lastUrls.splice(index, 1);
+  }
+
+  lastUrls.unshift(url);
   while (lastUrls.length > URLCOUNT) {
-    lastUrls.pop()
-  }
-
-  var checkNewUrl = {}
-  for(var i = 0; i < lastUrls.length; i++) {
-    checkNewUrl[lastUrls[i]] = 1;
-  }
-
-  if (!checkNewUrl[url]) {
-    if (lastUrls.length >= URLCOUNT) {
-      lastUrls.pop();
-    }
-    lastUrls.push(url);
+    lastUrls.pop();
   }
 
   openurl(url);
+  io.sockets.emit('lastUrls', {urls: lastUrls});
 }
 
 

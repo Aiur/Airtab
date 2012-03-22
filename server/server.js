@@ -25,22 +25,20 @@ app.get('/', function (req, res) {
 app.get('/jquery.js', function(req, res) {
   res.sendfile(__dirname + '/jquery-1.7.2.js');
 });
+app.get('/client.js', function(req, res) {
+  res.sendfile(__dirname + '/client.js');
+});
 
 app.get('/lasturls', function(req, res) {
   res.send({ urls: lastUrls })
 });
 
 app.post('/', function(req, res){
-  console.log('PRASHANT LOG');
-  console.log(req);
-  console.log(req.body);
-  res.send(req.body);
   console.log('URL post:' + req.body.url);
   openUrl(req.body.url);
 });
 
 io.sockets.on('connection', function (socket) {
-  console.log('got a new connection');
   socket.on('newUrl', function (data) {
     console.log(data);
     openUrl(data.url);

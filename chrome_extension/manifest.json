@@ -7,10 +7,14 @@
     "popup": "popup.html"
   },
   "permissions": [
+    "contextMenus",
     "tabs",
     "notifications",
     "http://192.168.*"
   ],
+  "icons": {
+    "16": "icon.png"
+  },
   "options_page": "options.html",
   "background_page": "background.html"
 }

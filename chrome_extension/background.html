@@ -8,24 +8,37 @@
         connected: false,
         selectedTabId: null,
         postUrl: null,
+        urlPatterns: ["http://*/*", "https://*/*", "ftp://*/*"]
       };
+      
+      
+      // Figure out which URL to send to the server based on the context it was clicked in
+      function contextClick(info, tab) {
+        var url = info.linkUrl
+        if(!url) {
+          url = info.srcUrl;
+        }
+        if(!url) {
+          url = info.pageUrl;
+        }
+        
+        sendUrl(url, function(res) { });
+      }
+      
+      // support reloads
+      chrome.contextMenus.removeAll();
+      chrome.contextMenus.create({title: "Send to Server", contexts: ["all"], onclick: contextClick, targetUrlPatterns: state.urlPatterns});
 
       chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
         state.selectedTabId = tabId;
       });
       
+      // Called by popup button, figure out current tab URL and send it
       function sendTab(sendReturn) {
           if (state.selectedTabId) {
             chrome.tabs.get(state.selectedTabId, function(tab) {
               if (tab) {
-                $.post(state.postUrl, {'url': tab.url,
-                  success: function () {
-                    sendReturn('YAY');
-                    console.log('yay!');
-                  },
-                  error: function(xhr, ajaxOptions, thrownError) {
-                    sendReturn('Hopefully sent the URL');
-                  }}); 
+                sendUrl(tab.url, sendReturn);
               } else {
                 console.log('tab undefined');
                 sendReturn('tab undefined, booo!');
@@ -35,6 +48,17 @@
             console.log('invalid tab or invalid action');
             sendReturn('invalid tab or no tab');
           }
+      }
+      
+      // Send a URL to the server and call callback with the result
+      function sendUrl(url, callback) {
+        $.post(state.postUrl, {'url': url,
+          success: function () {
+            callback('YAY');
+          },
+          error: function(xhr, ajaxOptions, thrownError) {
+            callback('Hopefully sent the URL');
+          }}); 
       }
 
       // Listen for the 'sendTab' action from the popup. 

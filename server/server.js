@@ -50,6 +50,7 @@ app.get('/client.js', function(req, res) {
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)
   openUrl(req.body.url);
+  res.send({'status': 'ok'});
 });
 
 

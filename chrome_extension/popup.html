@@ -5,11 +5,9 @@
 
     <div id="message"></div>
     <script>
-      chrome.extension.sendRequest({action: "sendTab"}, function(response) {
-        if (response) {
-          var message = document.getElementById('message');
-          message.innerHTML = response.message;
-        }
+      chrome.extension.getBackgroundPage().sendTab(function(res) {
+        var message = document.getElementById('message');
+        message.innerHTML = res;
       });
     </script>
   </body>

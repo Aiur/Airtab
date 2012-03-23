@@ -13,6 +13,29 @@
       chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
         state.selectedTabId = tabId;
       });
+      
+      function sendTab(sendReturn) {
+          if (state.selectedTabId) {
+            chrome.tabs.get(state.selectedTabId, function(tab) {
+              if (tab) {
+                $.post(state.postUrl, {'url': tab.url,
+                  success: function () {
+                    sendReturn('YAY');
+                    console.log('yay!');
+                  },
+                  error: function(xhr, ajaxOptions, thrownError) {
+                    sendReturn('Hopefully sent the URL');
+                  }}); 
+              } else {
+                console.log('tab undefined');
+                sendReturn('tab undefined, booo!');
+              }
+            });
+          } else {
+            console.log('invalid tab or invalid action');
+            sendReturn('invalid tab or no tab');
+          }
+      }
 
       // Listen for the 'sendTab' action from the popup. 
       chrome.extension.onRequest.addListener(

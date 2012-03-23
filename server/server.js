@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express.createServer();
 var io = require('socket.io').listen(app);
-var openurl = require('openurl').open;
+var exec = require("child_process").exec
 
 app.listen(8090);
 // bootstrap
@@ -24,7 +24,12 @@ function openUrl(url) {
   }
 
   try {
-    openurl(url);
+    if (process.platform=='win32') {
+      execStr = "explorer.exe ^\"" + url + "^\"";
+      exec(execStr);
+    } else {
+      require("openurl").open(url);c
+    }
   } catch (err) {
     console.log('Unable to open url: ' + url);
   }

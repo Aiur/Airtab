@@ -1,13 +1,45 @@
 <html>
   <head>
     <style type="text/css">
+      #deadzone {
+        margin: 1px;
+        width: 100%;
+        height: 100%;
+        display: block;
+        border: solid 1px red;
+      }
+      #trackpad {
+        width: 90%;
+        height: 90%;
+        margin: auto;
+        border: solid 1px;
+        display: block;
+      }
     </style>
   </head>
   <body>
+    <div id="deadzone">
+      <div id="trackpad"></div>
+    </div>
     <script type="text/javascript" src="/jquery.js"></script>
     <script type="text/javascript" src="/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
+      var clipX = 0;
+      var clipY = 0;
+      var deadzone = $("#deadzone");
+      var trackpad = $("#trackpad");
+      // Resize the trackpad when the browser window resizes.
+      function adjustTrackpad() {
+        $("#trackpad").css({
+          "margin-top": deadzone.height() * 0.05
+        });
+        clipX = (deadzone.width() - trackpad.width()) / 2;
+        clipY = (deadzone.height() - trackpad.height()) / 2;
+      }
+      $(window).resize(adjustTrackpad);
+      adjustTrackpad();
+
       var socket = io.connect("/");
       var MOUSE_BUTTONS = {
         1: "left", 
@@ -17,20 +49,32 @@
 
       function makeMouseHandler(action) {
         return function(e) {
+          // Calculate mouse position relative to the deadzone.
+          var relX = e.pageX - $(this).offset().left;
+          var relY = e.pageY - $(this).offset().top;
+
+          // Calculate the coordinate inside the trackpad and clip anything
+          // inside the deadzone.
+          var pX = Math.min(trackpad.width(), 
+              Math.max(0, relX - clipX));
+          var pY = Math.min(trackpad.height(), 
+              Math.max(0, relY - clipY));
+
           var data = {
-            "pX": e.pageX / $(document).width(),
-            "pY": e.pageY / $(document).height(),
+            "pX": pX / trackpad.width(),
+            "pY": pY / trackpad.height(),
             "btn": e.which ? MOUSE_BUTTONS[e.which] : null,
           };
+
           socket.emit(action, data);
         };
       }
 
-      $(document).mousemove(makeMouseHandler("mousemove"));
-      $(document).mousedown(makeMouseHandler("mousedown"));
-      $(document).mouseup(makeMouseHandler("mouseup"));
+      deadzone.mousemove(makeMouseHandler("mousemove"));
+      deadzone.mousedown(makeMouseHandler("mousedown"));
+      deadzone.mouseup(makeMouseHandler("mouseup"));
 
-      $(document).bind("contextmenu", function(e) {
+      deadzone.bind("contextmenu", function(e) {
           e.preventDefault();
           return false;
       });
@@ -46,7 +90,7 @@
       $(document).keydown(makeKeyHandler("keydown"));
       $(document).keyup(makeKeyHandler("keyup"));
 
-      $(document).mousewheel(function(e, deltaX, deltaY) {
+      $("#deadzone").mousewheel(function(e, deltaX, deltaY) {
           if (deltaY !== 0) {
             socket.emit("scrollX", deltaY);
           }

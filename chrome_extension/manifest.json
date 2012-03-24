@@ -10,7 +10,7 @@
     "contextMenus",
     "tabs",
     "notifications",
-    "http://192.168.*"
+    "http://192.168.*/*"
   ],
   "icons": {
     "16": "icon.png"

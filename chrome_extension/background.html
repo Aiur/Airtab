@@ -31,6 +31,7 @@
 
       chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
         state.selectedTabId = tabId;
+        console.log('active tab changed');
       });
       
       // Called by popup button, figure out current tab URL and send it
@@ -69,9 +70,13 @@
               if (tab) {
                 $.post(state.postUrl, {'url': tab.url})
                   .success(function () {
+                    // TODO: never gets called because extensions can't get
+                    // responses from post requests.
+                    console.log('success');
                     sendResponse({"message": "sent: " + tab.url});
                   })
                   .error(function() {
+                    console.log('error');
                     sendResponse({"message": "ajax post failed."});
                   }); 
               } else {

@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <style type="text/css">
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="/jquery.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+      var socket = io.connect("/");
+      var MOUSE_BUTTONS = {
+        1: "left", 
+        2: "middle", 
+        3: "right"
+      };
+
+      function makeMouseEvent(action) {
+        return function(e) {
+          var data = {
+            "ctrl": e.ctrlKey,
+            "shift": e.shiftKey,
+            "alt": e.alt,
+            "cmd": e.metaKey,
+            "pX": 100 * e.pageX / $(document).width(),
+            "pY": 100 * e.pageY / $(document).height(),
+            "btn": e.which ? MOUSE_BUTTONS[e.which] : null,
+          };
+          socket.emit(action, data);
+          console.log(action);
+          console.log(data);
+        };
+      }
+
+      $(document).mousemove(makeMouseEvent("mousemove"));
+      $(document).mousedown(makeMouseEvent("mousedown"));
+      $(document).mouseup(makeMouseEvent("mouseup"));
+    </script>
+  </body>
+</html>

@@ -53,13 +53,17 @@ app.get('/jquery.js', function(req, res) {
 app.get('/client.js', function(req, res) {
   res.sendfile(__dirname + '/client.js');
 });
+app.get('/remote.html', function(req, res) {
+  res.sendfile(__dirname + '/remote.html');
+});
+app.get('/chrome_app/app.html', function(req, res) {
+  res.sendfile(__dirname + '/chrome_app/app.html');
+});
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)
   openUrl(req.body.url);
   res.send({'status': 'ok'});
 });
-
-
 io.sockets.on('connection', function (socket) {
   socket.on('newUrl', function (data) {
     console.log(data);
@@ -68,6 +72,15 @@ io.sockets.on('connection', function (socket) {
   socket.on('lastUrls', function(data) {
     console.log('lastURL request');
     socket.emit('lastUrls', { urls: lastUrls });
+  });
+  socket.on("mousemove", function(data) {
+    console.log(data);
+  });
+  socket.on("mosueup", function(data) {
+    console.log(data);
+  });
+  socket.on("mousedown", function(data) {
+    console.log(data);
   });
 });
 

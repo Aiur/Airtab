@@ -16,5 +16,9 @@ namespace AirTabInputServer
         void MouseClick(MouseButton button);
         void KeyDown(byte keycode);
         void KeyUp(byte keycode);
+        void GetScreenSize(out int width, out int height);
+        void MouseDown(MouseButton button);
+        void MouseUp(MouseButton button);
+
     }
 }

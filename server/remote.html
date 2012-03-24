@@ -5,6 +5,7 @@
   </head>
   <body>
     <script type="text/javascript" src="/jquery.js"></script>
+    <script type="text/javascript" src="/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
       var socket = io.connect("/");
@@ -17,23 +18,18 @@
       function makeMouseHandler(action) {
         return function(e) {
           var data = {
-            "ctrl": e.ctrlKey,
-            "shift": e.shiftKey,
-            "alt": e.alt,
-            "cmd": e.metaKey,
             "pX": 100 * e.pageX / $(document).width(),
             "pY": 100 * e.pageY / $(document).height(),
             "btn": e.which ? MOUSE_BUTTONS[e.which] : null,
           };
           socket.emit(action, data);
-          console.log(action);
-          console.log(data);
         };
       }
 
       $(document).mousemove(makeMouseHandler("mousemove"));
       $(document).mousedown(makeMouseHandler("mousedown"));
       $(document).mouseup(makeMouseHandler("mouseup"));
+
       $(document).bind("contextmenu", function(e) {
           e.preventDefault();
           return false;
@@ -44,12 +40,22 @@
           socket.emit(action, { keyCode: e.which });
           e.stopPropagation();
           e.preventDefault();
-          console.log(action +": " + e.which);
           return false
         };
       }
       $(document).keydown(makeKeyHandler("keydown"));
       $(document).keyup(makeKeyHandler("keyup"));
+
+      $(document).mousewheel(function(e, deltaX, deltaY) {
+          if (deltaX !== 0) {
+            socket.emit("scrollY", deltaY);
+          }
+          if (deltaY !== 0) {
+            socket.emit("scrollX", deltaX);
+          }
+          e.preventDefault();
+          return false;
+      });
     </script>
   </body>
 </html>

@@ -6,6 +6,7 @@ var exec = require("child_process").exec
 app.listen(8090);
 // bootstrap
 app.use('/bootstrap', express.static(__dirname + '/bootstrap'));
+app.use('/chrome_app', express.static(__dirname + '/chrome_app'));
 app.use(express.bodyParser());
 
 var URLCOUNT = 10
@@ -50,14 +51,14 @@ app.get('/', function (req, res) {
 app.get('/jquery.js', function(req, res) {
   res.sendfile(__dirname + '/jquery-1.7.2.js');
 });
+app.get('/jquery.mousewheel.js', function(req, res) {
+  res.sendfile(__dirname + '/jquery.mousewheel.js');
+});
 app.get('/client.js', function(req, res) {
   res.sendfile(__dirname + '/client.js');
 });
 app.get('/remote.html', function(req, res) {
   res.sendfile(__dirname + '/remote.html');
-});
-app.get('/chrome_app/app.html', function(req, res) {
-  res.sendfile(__dirname + '/chrome_app/app.html');
 });
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)

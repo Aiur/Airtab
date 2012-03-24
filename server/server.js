@@ -25,7 +25,13 @@ function openUrl(url) {
 
   try {
     if (process.platform=='win32') {
-      execStr = "explorer.exe ^\"" + url + "^\"";
+      escapeChars = "^<>?{}&";
+      for(var i = 0; i < escapeChars.length; i++) {
+        url = url.replace(escapeChars[i], "^" + escapeChars[i]);
+      }
+      
+      execStr = "explorer.exe ^\"" + url;
+      console.log("Exec on windows: " + execStr);
       exec(execStr);
     } else {
       require("openurl").open(url);c

@@ -18,8 +18,8 @@
       function makeMouseHandler(action) {
         return function(e) {
           var data = {
-            "pX": 100 * e.pageX / $(document).width(),
-            "pY": 100 * e.pageY / $(document).height(),
+            "pX": e.pageX / $(document).width(),
+            "pY": e.pageY / $(document).height(),
             "btn": e.which ? MOUSE_BUTTONS[e.which] : null,
           };
           socket.emit(action, data);

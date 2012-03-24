@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace AirTabInputServer
 {
-    public enum MouseButton {
-        Left, Right
+    public enum MouseButton
+    {
+        Left, Middle, Right
     };
 
     interface InputClient

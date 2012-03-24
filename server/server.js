@@ -1,7 +1,8 @@
 var express = require("express");
 var app = express.createServer();
 var io = require('socket.io').listen(app);
-var exec = require("child_process").exec
+var exec = require("child_process").exec;
+var spawn = require("child_process").spawn;
 
 app.listen(8090);
 // bootstrap
@@ -45,6 +46,13 @@ function openUrl(url) {
 }
 
 
+// Start our child process which interacts with mouse+keyboard
+proc = spawn("AirTabInputServer.exe");
+proc.stdout.on('data', function(data) {
+  console.log('Got data from server');
+  console.log(data);
+});
+
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
@@ -75,13 +83,27 @@ io.sockets.on('connection', function (socket) {
     socket.emit('lastUrls', { urls: lastUrls });
   });
   socket.on("mousemove", function(data) {
+    proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
     console.log(data);
   });
-  socket.on("mosueup", function(data) {
+  socket.on("mouseup", function(data) {
+    proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+    proc.stdin.write("mu " + data.btn[0] + "\r\n");
     console.log(data);
   });
   socket.on("mousedown", function(data) {
+    proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+    proc.stdin.write("md " + data.btn[0] + "\r\n");
     console.log(data);
+  });
+  socket.on("keydown", function(data) {
+    proc.stdin.write("kd " + data.keyCode + "\r\n");
+  });
+  socket.on("keyup", function(data) {
+    proc.stdin.write("ku " + data.keyCode + "\r\n");
+  });
+  socket.on("disconnect", function(data) {
+    proc.stdin.write("clear\r\n");
   });
 });
 

@@ -17,6 +17,21 @@ namespace AirTabInputServer
         static void InputServer(InputClient client)
         {
             Console.Error.WriteLine("Start input server");
+            HashSet<byte> keysDown = new HashSet<byte>();
+
+            CloseHandler.SetCloseHandler(() =>
+            {
+                System.IO.File.WriteAllText("serverCloseLog.txt", "Server closing, resetting keys:\r\n");
+                foreach (byte keycode in keysDown)
+                {
+                    client.KeyUp(keycode);
+                    System.IO.File.AppendAllText("serverCloseLog.txt", "KeyCode: " + keycode + "\r\n");
+                }
+
+                client.MouseUp(MouseButton.Left);
+                client.MouseUp(MouseButton.Right);
+                client.MouseUp(MouseButton.Middle);
+            });
 
             // we work on a line by line basis
             string line;
@@ -50,10 +65,17 @@ namespace AirTabInputServer
                         case "md":
                         case "mu":
                             // Mouse click
-                            // clickType == parts[1], l = left, r = right
-                            bool leftClick = (parts[1] == "l");
+                            // clickType == parts[1], l = left, m = middle, r = right
 
-                            MouseButton btn = leftClick ? MouseButton.Left : MouseButton.Right;
+                            MouseButton btn = MouseButton.Left;
+                            if (parts[1] == "m") {
+                                btn = MouseButton.Middle;
+                            }
+                            else if (parts[1] == "r") 
+                            {
+                                btn = MouseButton.Right;
+                            }
+
                             if (parts[0] == "m")
                             {
                                 client.MouseClick(btn);
@@ -76,20 +98,22 @@ namespace AirTabInputServer
                         case "kd":
                         case "ku":
                             // Keyboard button
-                            byte keycode1 = byte.Parse(parts[1]);
+                            byte keycode = byte.Parse(parts[1]);
 
                             if (parts[0] == "k")
                             {
-                                client.KeyDown(keycode1);
-                                client.KeyUp(keycode1);
+                                client.KeyDown(keycode);
+                                client.KeyUp(keycode);
                             }
                             else if (parts[0] == "kd")
                             {
-                                client.KeyDown(keycode1);
+                                keysDown.Add(keycode);
+                                client.KeyDown(keycode);
                             }
                             else if (parts[0] == "ku")
                             {
-                                client.KeyUp(keycode1);
+                                if (keysDown.Contains(keycode)) keysDown.Remove(keycode);
+                                client.KeyUp(keycode);
                             }
                             else
                             {
@@ -103,6 +127,14 @@ namespace AirTabInputServer
 
                             client.GetScreenSize(out screenW, out screenH);
                             Console.WriteLine("{0} {1}", screenW, screenH);
+                            break;
+                        case "clear":
+                            // Reset all the current keys that are down
+
+                            foreach (byte keyCode in keysDown)
+                            {
+                                client.KeyUp(keyCode);
+                            }
                             break;
                         default:
                             throw new InvalidOperationException("Protocol Violation");

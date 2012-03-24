@@ -34,6 +34,10 @@
       $(document).mousemove(makeMouseHandler("mousemove"));
       $(document).mousedown(makeMouseHandler("mousedown"));
       $(document).mouseup(makeMouseHandler("mouseup"));
+      $(document).bind("contextmenu", function(e) {
+          e.preventDefault();
+          return false;
+      });
 
       function makeKeyHandler(action) {
         return function(e) {

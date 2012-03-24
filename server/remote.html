@@ -14,7 +14,7 @@
         3: "right"
       };
 
-      function makeMouseEvent(action) {
+      function makeMouseHandler(action) {
         return function(e) {
           var data = {
             "ctrl": e.ctrlKey,
@@ -31,9 +31,21 @@
         };
       }
 
-      $(document).mousemove(makeMouseEvent("mousemove"));
-      $(document).mousedown(makeMouseEvent("mousedown"));
-      $(document).mouseup(makeMouseEvent("mouseup"));
+      $(document).mousemove(makeMouseHandler("mousemove"));
+      $(document).mousedown(makeMouseHandler("mousedown"));
+      $(document).mouseup(makeMouseHandler("mouseup"));
+
+      function makeKeyHandler(action) {
+        return function(e) {
+          socket.emit(action, { keyCode: e.which });
+          e.stopPropagation();
+          e.preventDefault();
+          console.log(action +": " + e.which);
+          return false
+        };
+      }
+      $(document).keydown(makeKeyHandler("keydown"));
+      $(document).keyup(makeKeyHandler("keyup"));
     </script>
   </body>
 </html>

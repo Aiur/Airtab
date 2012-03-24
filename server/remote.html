@@ -47,11 +47,11 @@
       $(document).keyup(makeKeyHandler("keyup"));
 
       $(document).mousewheel(function(e, deltaX, deltaY) {
-          if (deltaX !== 0) {
-            socket.emit("scrollY", deltaY);
-          }
           if (deltaY !== 0) {
-            socket.emit("scrollX", deltaX);
+            socket.emit("scrollX", deltaY);
+          }
+          if (deltaX !== 0) {
+            socket.emit("scrollY", deltaX);
           }
           e.preventDefault();
           return false;

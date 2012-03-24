@@ -121,6 +121,11 @@ namespace AirTabInputServer
                             }
 
                             break;
+                        case "sy":
+                        case "sx":
+                            int scrollDelta = (int)(double.Parse(parts[1]) * 120);
+                            client.MouseScroll(scrollDelta, parts[0] == "sx");
+                            break;
                         case "s":
                             // Get screen size
                             int screenW, screenH;

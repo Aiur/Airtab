@@ -20,6 +20,6 @@ namespace AirTabInputServer
         void GetScreenSize(out int width, out int height);
         void MouseDown(MouseButton button);
         void MouseUp(MouseButton button);
-
+        void MouseScroll(int scrollDelta, bool isHorizontal);
     }
 }

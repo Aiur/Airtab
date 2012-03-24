@@ -84,17 +84,17 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on("mousemove", function(data) {
     proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
-    console.log(data);
+    //console.log(data);
   });
   socket.on("mouseup", function(data) {
     proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
     proc.stdin.write("mu " + data.btn[0] + "\r\n");
-    console.log(data);
+    //console.log(data);
   });
   socket.on("mousedown", function(data) {
     proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
     proc.stdin.write("md " + data.btn[0] + "\r\n");
-    console.log(data);
+    //console.log(data);
   });
   socket.on("keydown", function(data) {
     proc.stdin.write("kd " + data.keyCode + "\r\n");
@@ -104,6 +104,14 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on("disconnect", function(data) {
     proc.stdin.write("clear\r\n");
+  });
+  socket.on("scrollY", function(data) {
+    //console.log("scrollY " + data);
+    proc.stdin.write("sy " + data + "\r\n");
+  });
+  socket.on("scrollX", function(data) {
+    //console.log("scrollX " + data);
+    proc.stdin.write("sx " + data + "\r\n");
   });
 });
 

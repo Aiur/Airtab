@@ -11,7 +11,7 @@
         </style>
         <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     </head>
-    <body onkeydown="keyDownHandler()">
+    <body">
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -22,13 +22,15 @@
         <div class="hero-unit">
             <h3>Enter a URL to open on Aiur</h3>
             <p>
+                <form onsubmit="sendUrl(); return false;">
                 <div id="urlControlContainer" class="control-group"><div class="controls">
                 <input class="input-xxlarge search-query url_field_width" id="send_url" type="text" name="url" />
-                <a class="btn btn-primary" onclick="sendUrl(); return false;">Send</a>
+                <a class="btn btn-primary">Send</a>
                 <p>
                 <span id="errors" class="help-inline" style="display:none">Error</span>
                 </p>
                 </div></div>
+                <form>
             </p>
         </div>
         <div class="container">

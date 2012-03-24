@@ -6,25 +6,23 @@ function sendExplicitUrl(url) {
   socket.emit('newUrl', { url: url });
 }
 
+function resetErrors() {
+    $("#errors").fadeOut();
+    $("#urlControlContainer").removeClass('error');
+}
+
 function sendUrl() {
   var url = $("#send_url").val();
   var urlregex = new RegExp(
         "^(http:\/\/|https:\/\/|ftp:\/\/.){1}([0-9A-Za-z]+\.)");
   if (url && urlregex.test(url)) {
-    $("#errors").fadeOut();
-    $("#urlControlContainer").removeClass('error');
+    resetErrors();
     $("#send_url").val('');
     sendExplicitUrl(url);
   } else {
     $("#errors").text('Please enter a valid URL, the entered URL was not recognised!');
     $("#errors").fadeIn();
     $("#urlControlContainer").addClass('error');
-  }
-}
-
-function keyDownHandler() {
-  if (window.event.keyCode == 13) {
-    sendUrl();
   }
 }
 
@@ -52,3 +50,7 @@ socket.on('lastUrls', function(data) {
   }
 });
 
+$(document).ready(function() {
+  $("#send_url").focus();
+  $("#send_url").keydown(resetErrors);
+});

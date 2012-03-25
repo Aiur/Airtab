@@ -147,6 +147,7 @@ namespace AirTabInputServer
                             {
                                 client.KeyUp(keyCode);
                             }
+                            keysDown.Clear();
                             break;
                         case "debug":
                             // start of output

@@ -100,6 +100,10 @@
           e.preventDefault();
           return false;
       });
+
+      $(window).blur(function() {
+        socket.emit("clear", {});
+      });
     </script>
   </body>
 </html>

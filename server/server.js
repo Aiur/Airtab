@@ -124,6 +124,9 @@ io.sockets.on('connection', function (socket) {
   socket.on("disconnect", function(data) {
     proc.stdin.write("clear\r\n");
   });
+  socket.on("clear", function() {
+    proc.stdin.write("clear\r\n");
+  });
   socket.on("scrollY", function(data) {
     //console.log("scrollY " + data);
     proc.stdin.write("sy " + data + "\r\n");

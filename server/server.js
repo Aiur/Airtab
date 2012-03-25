@@ -55,15 +55,13 @@ outputHandlers = []
 
 proc.stdout.on('data', function(data) {
   data = data.toString();
-  console.log('Got data from server');
-  console.log(data);
   if (data.indexOf("==") == 0) {
     output = data;
   } else {
     output += data;
   }
   
-  if (output.indexOf("<><>")) {
+  if (output.indexOf("<><>") >= 0) {
     for(var i = 0; i < outputHandlers.length; i++) {
       outputHandlers[i](output);
     }

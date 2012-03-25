@@ -1,0 +1,17 @@
+Print lots of useful debugging info yay!
+
+<pre>
+<div id="debugInfo"></div>
+</pre>
+
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+var socket = io.connect('/');
+
+socket.emit('debugInputServer', {} );
+
+socket.on('debugInputServer', function(data) {
+  $("#debugInfo").text(data.text);
+});
+</script>

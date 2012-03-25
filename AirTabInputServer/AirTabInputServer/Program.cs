@@ -8,6 +8,9 @@ namespace AirTabInputServer
 {
     class Program
     {
+        static List<string> s_events = new List<string>();
+        const int MAX_EVENTS_HISTORY = 1000;
+
         static void Main(string[] args)
         {
             InputClient client = new Win32InputClient();
@@ -40,6 +43,10 @@ namespace AirTabInputServer
                 // we can process multiple commands in a single line separated by ;
                 foreach (string linePart in line.Split(new char[]{';'}, StringSplitOptions.RemoveEmptyEntries))
                 {
+                    // Add to history
+                    s_events.Add(linePart);
+                    while (s_events.Count > MAX_EVENTS_HISTORY) s_events.RemoveAt(0);
+
                     // split by space
                     string[] parts = linePart.Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries);
 
@@ -140,6 +147,24 @@ namespace AirTabInputServer
                             {
                                 client.KeyUp(keyCode);
                             }
+                            break;
+                        case "debug":
+                            // start of output
+                            Console.WriteLine("==debug==");
+                            Console.WriteLine("Event History:");
+                            foreach (string e in s_events)
+                            {
+                                Console.WriteLine(" " + e);
+                            }
+
+                            Console.WriteLine("Key Downs:");
+                            foreach (byte k in keysDown)
+                            {
+                                Console.WriteLine(" " + k);
+                            }
+                            
+                            // end of output
+                            Console.WriteLine("<><>");
                             break;
                         default:
                             throw new InvalidOperationException("Protocol Violation");

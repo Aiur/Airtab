@@ -48,9 +48,27 @@ function openUrl(url) {
 
 // Start our child process which interacts with mouse+keyboard
 proc = spawn("AirTabInputServer.exe");
+
+// Output handling from server app
+output = ""
+outputHandlers = []
+
 proc.stdout.on('data', function(data) {
+  data = data.toString();
   console.log('Got data from server');
   console.log(data);
+  if (data.indexOf("==") == 0) {
+    output = data;
+  } else {
+    output += data;
+  }
+  
+  if (output.indexOf("<><>")) {
+    for(var i = 0; i < outputHandlers.length; i++) {
+      outputHandlers[i](output);
+    }
+    output = "";
+  }
 });
 
 app.get('/', function (req, res) {
@@ -67,6 +85,9 @@ app.get('/client.js', function(req, res) {
 });
 app.get('/remote.html', function(req, res) {
   res.sendfile(__dirname + '/remote.html');
+});
+app.get('/debug.html', function(req, res) {
+  res.sendfile(__dirname + '/debug.html');
 });
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)
@@ -112,6 +133,16 @@ io.sockets.on('connection', function (socket) {
   socket.on("scrollX", function(data) {
     //console.log("scrollX " + data);
     proc.stdin.write("sx " + data + "\r\n");
+  });
+  socket.on("debugInputServer", function() {
+    proc.stdin.write("debug\r\n");
+    function myHandler(output) {
+      if(output.indexOf("==debug==" >= 0)) {
+        socket.emit("debugInputServer", { text: output });
+      }
+      outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
+    }
+    outputHandlers.push(myHandler);
   });
 });
 

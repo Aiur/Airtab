@@ -21,5 +21,6 @@ namespace AirTabInputServer
         void MouseDown(MouseButton button);
         void MouseUp(MouseButton button);
         void MouseScroll(int scrollDelta, bool isHorizontal);
+        void MouseMoveRelative(int xDiff, int yDiff);
     }
 }

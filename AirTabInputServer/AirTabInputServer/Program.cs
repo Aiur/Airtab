@@ -68,6 +68,15 @@ namespace AirTabInputServer
 
                             client.MouseMove(xPixel, yPixel);
                             break;
+                        case "mmr":
+                            // Relative mouse move
+                            // x change = parts[1], y change = parts[2]
+
+                            int xDiff = int.Parse(parts[1]);
+                            int yDiff = int.Parse(parts[2]);
+
+                            client.MouseMoveRelative(xDiff, yDiff);
+                            break;
                         case "m":
                         case "md":
                         case "mu":

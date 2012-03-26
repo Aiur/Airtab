@@ -130,5 +130,17 @@ namespace AirTabInputServer
             width = GetSystemMetrics(SystemMetric.SM_CXSCREEN);
             height = GetSystemMetrics(SystemMetric.SM_CYSCREEN);
         }
+
+        public void MouseMoveRelative(int xDiff, int yDiff)
+        {
+            MousePoint point;
+            if (!GetCursorPos(out point))
+            {
+                throw new InvalidOperationException("Could not get mouse position");
+            }
+
+            SetCursorPos(point.X + xDiff, point.Y + yDiff);
+        }
+
     }
 }

@@ -3,20 +3,38 @@
 <head>
   <title>Airtab!</title>
   <style type="text/css">
-    #listener
-    {
-      width: 100%;
-      height: 100%;
-      background: #ccc;
+    body, html {
+      height:100%;
+      margin: 0;
+    }
 
+    #listener {
       margin: 1px;
+      height: 100%;
+      width: 100%;
       display: block;
       border: solid 1px red;
+    }
+
+    #menu {
+      position: absolute;
+      right: 0;
+      top: 0;
     }
 
     #debug {
       position: absolute;
       pointer-events: none;
+      left: 0;
+    }
+
+    .nomouse {
+      pointer-events: none;
+    }
+
+    #screenshot {
+      position: absolute;
+      z-index: 100;
     }
 
     #trackpad {
@@ -32,15 +50,29 @@
   <script type="text/javascript" src="/jquery.mousewheel.js"></script>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
-    var socket = io.connect("/");
+    var server = "http://192.168.1.5:8090";
+    var socket = io.connect(server);
+    socket.on("screenshot", function(data) {
+        data.url = data.url.replace("\\", "/");
+        var img = $("#screenshot");
+        var trackpad = $("#trackpad");
+
+        img.attr("src", server + data.url);
+        img.css({
+          top: trackpad.offset().top,
+          left: trackpad.offset().left,
+          width: trackpad.width(),
+          height: trackpad.height(),
+        });
+    });
     AirtabModule = null;  // Global application object.
-    statusText = 'NO-STATUS';
+    statusText = "NO-STATUS";
 
     // Indicate load success.
     function moduleDidLoad() {
-      AirtabModule = document.getElementById('trackpad');
-      updateStatus('SUCCESS');
-      AirtabModule.postMessage('loaded');
+      AirtabModule = document.getElementById("trackpad");
+      updateStatus("SUCCESS");
+      AirtabModule.postMessage("loaded");
     }
 
     var MOUSE_DATA_INDEX = {
@@ -58,20 +90,22 @@
     // (in C) or pp::Instance.PostMessage() (in C++).  This implementation
     // simply displays the content of the message in an alert panel.
     function handleMessage(message) {
-      if (message.data instanceof String) {
-        var messageData = message.data.split(":");
-        if (messageData[0] === "mousemove") {
-          if (messageData[MOUSE_DATA_INDEX.mvX] !== 0 || messageData[MOUSE_DATA_INDEX.mvY] !== 0) {
-            var data = {
-              "dX": messageData[MOUSE_DATA_INDEX.mvX],
-              "dY": messageData[MOUSE_DATA_INDEX.mvY],
-              "btn": messageData[MOUSE_DATA_INDEX.button],
-            };
-            socket.emit("mousemoveRelative", data);
-          }
-        }
+      var messageData = message.data.split(":");
+      if (messageData[0] === "mousemove") {
+          var data = {
+            dX: messageData[MOUSE_DATA_INDEX.mvX],
+            dY: messageData[MOUSE_DATA_INDEX.mvY],
+            btn: messageData[MOUSE_DATA_INDEX.button],
+          };
+          socket.emit("mousemoveRelative", data);
+      } else if (messageData[0] === "mouseup" || 
+          messageData[0] === "mousedown") {
+        var data = {
+          noPosition: true,
+          btn: messageData[MOUSE_DATA_INDEX.button]
+        };
+        socket.emit(messageData[0], data);
       }
-      console.log(message.data);
     }
 
     // If the page loads before the Native Client module loads, then set the
@@ -111,36 +145,18 @@
   <h2>Status</h2>
   <div id="status_field">NO-STATUS</div>
 </div>
-  <!-- Load the published .nexe.  This includes the 'nacl' attribute which
-  shows how to load multi-architecture modules.  Each entry in the "nexes"
-  object in the .nmf manifest file is a key-value pair: the key is the
-  instruction set architecture ('x86-32', 'x86-64', etc.); the value is a URL
-  for the desired NaCl module.
-  To load the debug versions of your .nexes, set the 'nacl' attribute to the
-  _dbg.nmf version of the manifest file.
-
-  Note: Since this NaCl module does not use any real-estate in the browser,
-  it's width and height are set to 0.
-
-  Note: The <EMBED> element is wrapped inside a <DIV>, which has both a 'load'
-  and a 'message' event listener attached.  This wrapping method is used
-  instead of attaching the event listeners directly to the <EMBED> element to
-  ensure that the listeners are active before the NaCl module 'load' event
-  fires.  This also allows you to use PPB_Messaging.PostMessage() (in C) or
-  pp::Instance.PostMessage() (in C++) from within the initialization code in
-  your NaCl module.
-  -->
   <div id="listener">
     <script type="text/javascript">
-      var listener = document.getElementById('listener');
-      listener.addEventListener('load', moduleDidLoad, true);
-      listener.addEventListener('message', handleMessage, true);
+      var listener = document.getElementById("listener");
+      listener.addEventListener("load", moduleDidLoad, true);
+      listener.addEventListener("message", handleMessage, true);
     </script>
-    <embed name="nacl_module"
+     <embed name="nacl_module"
        id="trackpad"
        src="airtab_dbg.nmf"
        type="application/x-nacl" />
   </div>
+  <img class="nomouse" id="screenshot" />
 
   <script type="text/javascript">
     var clipX = 0;
@@ -150,7 +166,7 @@
     // Resize the trackpad when the browser window resizes.
     function adjustTrackpad() {
       $("#trackpad").css({
-        "margin-top": deadzone.height() * 0.05
+        "margin-top": Math.floor(deadzone.height() * 0.05)
       });
       clipX = (deadzone.width() - trackpad.width()) / 2;
       clipY = (deadzone.height() - trackpad.height()) / 2;
@@ -200,8 +216,14 @@
       return function(e) {
         socket.emit(action, { keyCode: e.which });
         if (action === "keydown" && e.keyCode === 117) { // f6
-          console.log("cmd:fullscreen");
-          AirtabModule.postMessage("cmd:fullscreen");
+          // ctrl f6 takes a screen shot.
+          // f6 enters full screen mode.
+          if (e.ctrlKey) {
+            socket.emit("screenshot");
+          } else {
+            console.log("cmd:fullscreen");
+            AirtabModule.postMessage("cmd:fullscreen");
+          }
         }
         e.stopPropagation();
         e.preventDefault();
@@ -221,7 +243,11 @@
         e.preventDefault();
         return false;
     });
-  
+
+    function screenshot() {
+      socket.emit("screenshot");
+    }
+    setInterval("screenshot()", 5000);
   </script>
 </body>
 </html>

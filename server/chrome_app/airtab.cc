@@ -61,9 +61,7 @@ class AirtabInstance : public pp::Instance, public pp::MouseLock {
 
     virtual bool Init(uint32_t argc, const char* argn[], const char* argv[]) {
       int32_t code = RequestInputEvents(PP_INPUTEVENT_CLASS_MOUSE);
-      int32_t code2 = RequestFilteringInputEvents(PP_INPUTEVENT_CLASS_WHEEL |
-          PP_INPUTEVENT_CLASS_KEYBOARD);
-      switch(code2) {
+      switch(code) {
         case PP_OK:
           PostMessage("Bind to events successful");
           break;
@@ -101,24 +99,20 @@ class AirtabInstance : public pp::Instance, public pp::MouseLock {
         PP_InputEvent_MouseButton button) {
       switch (button) {
         case PP_INPUTEVENT_MOUSEBUTTON_NONE:
-          return "n";
+          return "none";
         case PP_INPUTEVENT_MOUSEBUTTON_LEFT:
-          return "l";
+          return "left";
         case PP_INPUTEVENT_MOUSEBUTTON_MIDDLE:
-          return "m";
+          return "middle";
         case PP_INPUTEVENT_MOUSEBUTTON_RIGHT:
-          return "r";
+          return "right";
         default:
-          return "u";
+          return "unknown";
       }
     }
 
     virtual bool HandleMouseEvent(const pp::MouseInputEvent& event,
         const std::string& kind) {
-      if (kind != "mousemove") {
-        return false;
-      }
-
       if (this->fullscreen.IsFullscreen() && !this->mouselocked) {
         LockMouse(callback_factory.NewRequiredCallback(
               &AirtabInstance::DidLockMouse));
@@ -147,6 +141,11 @@ class AirtabInstance : public pp::Instance, public pp::MouseLock {
       switch (event.GetType()) {
         case PP_INPUTEVENT_TYPE_MOUSEMOVE:
           return HandleMouseEvent(pp::MouseInputEvent(event), "mousemove");
+        case PP_INPUTEVENT_TYPE_MOUSEDOWN:
+          return HandleMouseEvent(pp::MouseInputEvent(event), "mousedown");
+        case PP_INPUTEVENT_TYPE_MOUSEUP:
+          return HandleMouseEvent(pp::MouseInputEvent(event), "mouseup");
+
         default:
           return false;
       }

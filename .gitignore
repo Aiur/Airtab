@@ -3,3 +3,6 @@ AirtabInputServer/*/bin/
 AirtabInputServer/*/obj/
 /server/serverCloseLog.txt
 /server/screenshots/screen*.png
+*.o
+*.nexe
+*.swp

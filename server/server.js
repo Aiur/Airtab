@@ -105,6 +105,10 @@ io.sockets.on('connection', function (socket) {
     proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
     //console.log(data);
   });
+  socket.on("mousemoveRelative", function(data) {
+    proc.stdin.write("mmr " + data.pX + " " + data.pY + "\r\n");
+    console.log(data);
+  });
   socket.on("mouseup", function(data) {
     proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
     proc.stdin.write("mu " + data.btn[0] + "\r\n");

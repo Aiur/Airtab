@@ -187,8 +187,9 @@ class AirtabInstance : public pp::Instance, public pp::MouseLock {
       case PP_INPUTEVENT_TYPE_CONTEXTMENU:
         return HandleKeyEvent(pp::KeyboardInputEvent(event), "ctx");
       default:
-        PostMessage("unknown:" + event.GetType());
-        return false; // Consume the event.
+        PostMessage("unknown:");
+        PostMessage(event.GetType());
+        return false;
     }
     return false;
   }

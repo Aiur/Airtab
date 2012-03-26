@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -142,5 +144,37 @@ namespace AirTabInputServer
             SetCursorPos(point.X + xDiff, point.Y + yDiff);
         }
 
+        public string Screenshot(string dir)
+        {
+            int screenW, screenH;
+            GetScreenSize(out screenW, out screenH);
+            Bitmap memImage = new Bitmap(screenW, screenH);
+            Graphics g = Graphics.FromImage(memImage);
+            g.CopyFromScreen(0, 0, 0, 0, memImage.Size);
+
+
+            // create the directory if it doesn't exist - mostly for debugging
+            if (!System.IO.Directory.Exists(dir))
+            {
+                System.IO.Directory.CreateDirectory(dir);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    String savedFile = "";
+                    savedFile = dir + System.IO.Path.DirectorySeparatorChar +  "screen" + i + ".png";
+                    memImage.Save(savedFile, ImageFormat.Png);
+                    return savedFile;
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine("Failed to capture screenshot at iteration {0}: {1}", i, e);
+                }
+            }
+
+            return dir + System.IO.Path.DirectorySeparatorChar + "failed.png";
+        }
     }
 }

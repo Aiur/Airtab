@@ -9,6 +9,8 @@
 <a href="?" onclick="getLast(); return false;">Get Last URLs</a>
 <br />
 <span id="lasturls">Last URLs</span>
+
+<img id="screenshot" />
 <script>
   var socket = io.connect('http://localhost:8090');
       document.getElementById('logs').innerHTML += "\n" + "Connected!";
@@ -22,12 +24,21 @@
         document.getElementById('lasturls').innerHTML += "<br>" + data.urls[i];
     }
   });
+  socket.on('screenshot', function(data) {
+    document.getElementById('screenshot').src = data.url;
+  });
+  
   function sendUrl(url) {
         socket.emit('newUrl', { url: url });
     }
     function getLast() {
         socket.emit('lastUrls', { });
     }
+    
+    function refreshImage() {
+      socket.emit('screenshot', { });
+    }
+    setTimeout("refreshImage()", 5000);
 </script>
 
 

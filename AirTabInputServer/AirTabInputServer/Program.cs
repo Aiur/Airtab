@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AirTabInputServer
 {
@@ -148,6 +145,13 @@ namespace AirTabInputServer
 
                             client.GetScreenSize(out screenW, out screenH);
                             Console.WriteLine("{0} {1}", screenW, screenH);
+                            break;
+                        case "ss":
+                            // Take screenshot - dir to save is first param, returns file saved (including dir name)
+                            string filename = client.Screenshot(parts[1]);
+                            Console.WriteLine("==screenshot==");
+                            Console.WriteLine(filename);
+                            Console.WriteLine("<><>");
                             break;
                         case "clear":
                             // Reset all the current keys that are down

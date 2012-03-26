@@ -8,6 +8,7 @@ app.listen(8090);
 // bootstrap
 app.use('/bootstrap', express.static(__dirname + '/bootstrap'));
 app.use('/chrome_app', express.static(__dirname + '/chrome_app'));
+app.use('/screenshots', express.static(__dirname + '/screenshots'));
 app.use(express.bodyParser());
 
 var URLCOUNT = 10
@@ -87,6 +88,9 @@ app.get('/remote.html', function(req, res) {
 app.get('/debug.html', function(req, res) {
   res.sendfile(__dirname + '/debug.html');
 });
+app.get('/test.html', function(req, res) {
+  res.sendfile(__dirname + '/test.html');
+});
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)
   openUrl(req.body.url);
@@ -106,16 +110,20 @@ io.sockets.on('connection', function (socket) {
     //console.log(data);
   });
   socket.on("mousemoveRelative", function(data) {
-    proc.stdin.write("mmr " + data.pX + " " + data.pY + "\r\n");
+    proc.stdin.write("mmr " + data.dX + " " + data.dY + "\r\n");
     console.log(data);
   });
   socket.on("mouseup", function(data) {
-    proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+    if (!data.noPosition) {
+      proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+    }
     proc.stdin.write("mu " + data.btn[0] + "\r\n");
     //console.log(data);
   });
   socket.on("mousedown", function(data) {
-    proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+    if (!data.noPosition) {
+      proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+    }
     proc.stdin.write("md " + data.btn[0] + "\r\n");
     //console.log(data);
   });
@@ -139,13 +147,24 @@ io.sockets.on('connection', function (socket) {
     //console.log("scrollX " + data);
     proc.stdin.write("sx " + data + "\r\n");
   });
+  socket.on("screenshot", function(data) {
+    proc.stdin.write("ss screenshots\r\n");
+    function myHandler(output) {
+      if(output.indexOf("==screenshot==" >= 0)) {
+        var parts = output.split("\r\n");
+        socket.emit("screenshot", {url: "/" + parts[1]});
+        outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
+      }
+    }
+    outputHandlers.push(myHandler);
+  });
   socket.on("debugInputServer", function() {
     proc.stdin.write("debug\r\n");
     function myHandler(output) {
       if(output.indexOf("==debug==" >= 0)) {
         socket.emit("debugInputServer", { text: output });
+        outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
       }
-      outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
     }
     outputHandlers.push(myHandler);
   });

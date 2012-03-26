@@ -1,0 +1,20 @@
+{
+  "name": "Airtab controller",
+    "description": "Control shit remotely",
+    "version": "1",
+    "app": {
+      "urls": [
+        "http://192.168.1.7/"
+      ],
+      "launch": {
+        "web_url": "http://192.168.1.7:8090/chrome_app/airtab.html"
+      }
+    },
+    "icons": {
+      "128": "icon_128.png"
+    },
+    "permissions": [
+      "unlimitedStorage",
+      "notifications"
+    ]
+}

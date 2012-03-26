@@ -67,7 +67,7 @@
               "dY": messageData[MOUSE_DATA_INDEX.mvY],
               "btn": messageData[MOUSE_DATA_INDEX.button],
             };
-            socket.emit("mousemoveRelative");
+            socket.emit("mousemoveRelative", data);
           }
         }
       }
@@ -199,12 +199,13 @@
     function makeKeyHandler(action) {
       return function(e) {
         socket.emit(action, { keyCode: e.which });
-        if (e.keyCode === 117) { // f6
+        if (action === "keydown" && e.keyCode === 117) { // f6
+          console.log("cmd:fullscreen");
           AirtabModule.postMessage("cmd:fullscreen");
         }
         e.stopPropagation();
         e.preventDefault();
-        return false
+        return false;
       };
     }
     $(document).keydown(makeKeyHandler("keydown"));

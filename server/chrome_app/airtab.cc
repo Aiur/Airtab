@@ -44,200 +44,159 @@
 /// receiving messages from the borwser, and use PostMessage() to send messages
 /// back to the browser.  Note that this interface is entirely asynchronous.
 class AirtabInstance : public pp::Instance, public pp::MouseLock {
- public:
-  /// The constructor creates the plugin-side instance.
-  /// @param[in] instance the handle to the browser-side plugin instance.
-  explicit AirtabInstance(PP_Instance instance) :
-    pp::Instance(instance),
-    pp::MouseLock(this),
-    width(0),
-    height(0),
-    mouselocked(false),
-    callback_factory(this),
-    fullscreen(this)
+  public:
+    /// The constructor creates the plugin-side instance.
+    /// @param[in] instance the handle to the browser-side plugin instance.
+    explicit AirtabInstance(PP_Instance instance) :
+      pp::Instance(instance),
+      pp::MouseLock(this),
+      width(0),
+      height(0),
+      mouselocked(false),
+      callback_factory(this),
+      fullscreen(this)
   {
   }
-  virtual ~AirtabInstance() {}
+    virtual ~AirtabInstance() {}
 
-  virtual bool Init(uint32_t argc, const char* argn[], const char* argv[]) {
-    int32_t code = RequestInputEvents(PP_INPUTEVENT_CLASS_MOUSE);
-    int32_t code2 = RequestFilteringInputEvents(PP_INPUTEVENT_CLASS_WHEEL |
-        PP_INPUTEVENT_CLASS_KEYBOARD);
-    switch(code2) {
-      case PP_OK:
-        PostMessage("Bind to events successful");
-        break;
-      case PP_ERROR_BADARGUMENT:
-        PostMessage("Invalid instance while trying to bind to events");
-        break;
-      case PP_ERROR_NOTSUPPORTED:
-        PostMessage("Illegal event bits");
-        break;
-    }
-
-    return true;
-  }
-
-  /// Handler for messages coming in from the browser via postMessage().  The
-  /// @a var_message can contain anything: a JSON string; a string that encodes
-  /// method names and arguments; etc.  For example, you could use
-  /// JSON.stringify in the browser to create a message that contains a method
-  /// name and some parameters, something like this:
-  ///   var json_message = JSON.stringify({ "myMethod" : "3.14159" });
-  ///   nacl_module.postMessage(json_message);
-  /// On receipt of this message in @a var_message, you could parse the JSON to
-  /// retrieve the method name, match it to a function call, and then call it
-  /// with the parameter.
-  /// @param[in] var_message The message posted by the browser.
-  virtual void HandleMessage(const pp::Var& var_message) {
-    if (var_message == "cmd:fullscreen") {
-      if (this->fullscreen.SetFullscreen(true)) {
-        PostMessage("entered fullscreen");
+    virtual bool Init(uint32_t argc, const char* argn[], const char* argv[]) {
+      int32_t code = RequestInputEvents(PP_INPUTEVENT_CLASS_MOUSE);
+      int32_t code2 = RequestFilteringInputEvents(PP_INPUTEVENT_CLASS_WHEEL |
+          PP_INPUTEVENT_CLASS_KEYBOARD);
+      switch(code2) {
+        case PP_OK:
+          PostMessage("Bind to events successful");
+          break;
+        case PP_ERROR_BADARGUMENT:
+          PostMessage("Invalid instance while trying to bind to events");
+          break;
+        case PP_ERROR_NOTSUPPORTED:
+          PostMessage("Illegal event bits");
+          break;
       }
 
-      LockMouse(callback_factory.NewRequiredCallback(
-        &AirtabInstance::DidLockMouse));
-      PostMessage("lock mouse");
+      return true;
     }
-  }
 
-  virtual const std::string MouseButtonString(PP_InputEvent_MouseButton button) {
-    switch (button) {
-      case PP_INPUTEVENT_MOUSEBUTTON_NONE:
-        return "n";
-      case PP_INPUTEVENT_MOUSEBUTTON_LEFT:
-        return "l";
-      case PP_INPUTEVENT_MOUSEBUTTON_MIDDLE:
-        return "m";
-      case PP_INPUTEVENT_MOUSEBUTTON_RIGHT:
-        return "r";
-      default:
-        return "u";
+    /// Handler for messages coming in from the browser via postMessage().  The
+    /// @a var_message can contain anything: a JSON string; a string that encodes
+    /// method names and arguments; etc.  For example, you could use
+    /// JSON.stringify in the browser to create a message that contains a method
+    /// name and some parameters, something like this:
+    ///   var json_message = JSON.stringify({ "myMethod" : "3.14159" });
+    ///   nacl_module.postMessage(json_message);
+    /// On receipt of this message in @a var_message, you could parse the JSON to
+    /// retrieve the method name, match it to a function call, and then call it
+    /// with the parameter.
+    /// @param[in] var_message The message posted by the browser.
+    virtual void HandleMessage(const pp::Var& var_message) {
+      if (var_message == "cmd:fullscreen") {
+        if (this->fullscreen.SetFullscreen(true)) {
+          PostMessage("entered fullscreen");
+        }
+      }
     }
-  }
 
-  virtual bool HandleMouseEvent(const pp::MouseInputEvent& event,
-                                const std::string& kind) {
-    if (!mouselocked || kind != "mousemove") {
+    virtual const std::string MouseButtonString(
+        PP_InputEvent_MouseButton button) {
+      switch (button) {
+        case PP_INPUTEVENT_MOUSEBUTTON_NONE:
+          return "n";
+        case PP_INPUTEVENT_MOUSEBUTTON_LEFT:
+          return "l";
+        case PP_INPUTEVENT_MOUSEBUTTON_MIDDLE:
+          return "m";
+        case PP_INPUTEVENT_MOUSEBUTTON_RIGHT:
+          return "r";
+        default:
+          return "u";
+      }
+    }
+
+    virtual bool HandleMouseEvent(const pp::MouseInputEvent& event,
+        const std::string& kind) {
+      if (kind != "mousemove") {
+        return false;
+      }
+
+      if (this->fullscreen.IsFullscreen() && !this->mouselocked) {
+        LockMouse(callback_factory.NewRequiredCallback(
+              &AirtabInstance::DidLockMouse));
+        PostMessage("lock mouse");
+      }
+
+      if (!this->mouselocked) {
+        return false;
+      }
+
+      std::ostringstream stream;
+      stream << kind << ":"                                 // 0
+        << MouseButtonString(event.GetButton()) << ":"      // 1
+        << event.GetPosition().x() << ":"                   // 2
+        << event.GetPosition().y() << ":"                   // 3
+        << event.GetMovement().x() << ":"                   // 4
+        << event.GetMovement().y() << ":"                   // 5
+        << event.GetClickCount() << ":"                     // 6
+        << event.GetTimeStamp();                            // 7
+
+      PostMessage(stream.str());
+      return true;
+    }
+
+    virtual bool HandleInputEvent(const pp::InputEvent& event) {
+      switch (event.GetType()) {
+        case PP_INPUTEVENT_TYPE_MOUSEMOVE:
+          return HandleMouseEvent(pp::MouseInputEvent(event), "mousemove");
+        default:
+          return false;
+      }
       return false;
     }
 
-    std::ostringstream stream;
-    stream << kind << ":"                                      // 0
-           << MouseButtonString(event.GetButton()) << ":"      // 1
-           << event.GetPosition().x() << ":"                   // 2
-           << event.GetPosition().y() << ":"                   // 3
-           << event.GetMovement().x() << ":"                   // 4
-           << event.GetMovement().y() << ":"                   // 5
-           << event.GetClickCount() << ":"                     // 6
-           << event.GetTimeStamp();                            // 7
-
-    PostMessage(stream.str());
-    return true;
-  }
-
-  virtual bool HandleWheelEvent(const pp::WheelInputEvent& event) {
-    return false;
-    std::ostringstream stream;
-    stream << "wheel" << ":"
-         << event.GetDelta().x() << ":"
-         << event.GetDelta().y() << ":"
-         << event.GetTicks().x() << ":"
-         << event.GetTicks().y();
-    PostMessage(stream.str());
-    return true;
-  }
-
-  virtual bool HandleKeyEvent(const pp::KeyboardInputEvent& event,
-                              const std::string& kind) {
-    PostMessage("key event");
-    if (event.GetKeyCode() == 117) { // f6 toggles fullscreen.
-      this->fullscreen.SetFullscreen(!this->fullscreen.IsFullscreen());
-      PostMessage("entering fullscreen");
+    virtual void MouseLockLost() {
+      PostMessage(pp::Var("MouseLockLost"));
     }
 
-    if (!this->mouselocked && this->fullscreen.IsFullscreen()) {
-      LockMouse(callback_factory.NewRequiredCallback(
-        &AirtabInstance::DidLockMouse));
-      PostMessage("lock mouse");
+    void DidLockMouse(int32_t result) {
+      this->mouselocked = result == PP_OK;
+      if (this->mouselocked) {
+        PostMessage("Mouse locked");
+      } else {
+        PostMessage("Mouse lock failed");
+      }
     }
 
-    std::ostringstream stream;
-    stream << kind << ":"
-           << event.GetKeyCode() << ":"
-           << event.GetTimeStamp();
-    PostMessage(stream.str());
-    return true;
-  }
-
-  virtual bool HandleInputEvent(const pp::InputEvent& event) {
-    switch (event.GetType()) {
-      case PP_INPUTEVENT_TYPE_MOUSEDOWN:
-        return HandleMouseEvent(pp::MouseInputEvent(event), "mousedown");
-      case PP_INPUTEVENT_TYPE_MOUSEUP:
-        return HandleMouseEvent(pp::MouseInputEvent(event), "mouseup");
-      case PP_INPUTEVENT_TYPE_MOUSEMOVE:
-        return HandleMouseEvent(pp::MouseInputEvent(event), "mousemove");
-      case PP_INPUTEVENT_TYPE_WHEEL:
-        return HandleWheelEvent(pp::WheelInputEvent(event));
-      case PP_INPUTEVENT_TYPE_KEYDOWN:
-        return HandleKeyEvent(pp::KeyboardInputEvent(event), "keydown");
-      case PP_INPUTEVENT_TYPE_KEYUP:
-        return HandleKeyEvent(pp::KeyboardInputEvent(event), "keyup");
-      case PP_INPUTEVENT_TYPE_CONTEXTMENU:
-        return HandleKeyEvent(pp::KeyboardInputEvent(event), "ctx");
-      default:
-        PostMessage("unknown:");
-        PostMessage(event.GetType());
-        return false;
-    }
-    return false;
-  }
-
-  virtual void MouseLockLost() {
-    PostMessage(pp::Var("MouseLockLost"));
-  }
-
-  void DidLockMouse(int32_t result) {
-    this->mouselocked = result == PP_OK;
-    if (this->mouselocked) {
-      PostMessage("Mouse locked");
-    } else {
-      PostMessage("Mouse lock failed");
-    }
-  }
-
- private:
-  int width;
-  int height;
-  bool mouselocked;
-  pp::Fullscreen fullscreen;
-  pp::CompletionCallbackFactory<AirtabInstance> callback_factory;
+  private:
+    int width;
+    int height;
+    bool mouselocked;
+    pp::Fullscreen fullscreen;
+    pp::CompletionCallbackFactory<AirtabInstance> callback_factory;
 };
 
 /// The Module class.  The browser calls the CreateInstance() method to create
 /// an instance of your NaCl module on the web page.  The browser creates a new
 /// instance for each <embed> tag with type="application/x-nacl".
 class AirtabModule : public pp::Module {
- public:
-  AirtabModule() : pp::Module() {}
-  virtual ~AirtabModule() {}
+  public:
+    AirtabModule() : pp::Module() {}
+    virtual ~AirtabModule() {}
 
-  /// Create and return a AirtabInstance object.
-  /// @param[in] instance The browser-side instance.
-  /// @return the plugin-side instance.
-  virtual pp::Instance* CreateInstance(PP_Instance instance) {
-    return new AirtabInstance(instance);
-  }
+    /// Create and return a AirtabInstance object.
+    /// @param[in] instance The browser-side instance.
+    /// @return the plugin-side instance.
+    virtual pp::Instance* CreateInstance(PP_Instance instance) {
+      return new AirtabInstance(instance);
+    }
 };
 
 namespace pp {
-/// Factory function called by the browser when the module is first loaded.
-/// The browser keeps a singleton of this module.  It calls the
-/// CreateInstance() method on the object you return to make instances.  There
-/// is one instance per <embed> tag on the page.  This is the main binding
-/// point for your NaCl module with the browser.
-Module* CreateModule() {
-  return new AirtabModule();
-}
+  /// Factory function called by the browser when the module is first loaded.
+  /// The browser keeps a singleton of this module.  It calls the
+  /// CreateInstance() method on the object you return to make instances.  There
+  /// is one instance per <embed> tag on the page.  This is the main binding
+  /// point for your NaCl module with the browser.
+  Module* CreateModule() {
+    return new AirtabModule();
+  }
 }  // namespace pp

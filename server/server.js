@@ -152,7 +152,7 @@ io.sockets.on('connection', function (socket) {
     function myHandler(output) {
       if(output.indexOf("==screenshot==" >= 0)) {
         var parts = output.split("\r\n");
-        socket.emit("screenshot", {url: "/" + parts[1]});
+        socket.emit("screenshot", {url: "/" + parts[1].replace("\\", "/") });
         outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
       }
     }

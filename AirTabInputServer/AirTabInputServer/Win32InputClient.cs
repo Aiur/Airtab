@@ -159,7 +159,7 @@ namespace AirTabInputServer
                     Bitmap newImage = new Bitmap(width, height);
                     using (Graphics g2 = Graphics.FromImage(newImage))
                     {
-                        g2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
                         g2.DrawImage(memImage, new Rectangle(0, 0, width, height));
                         memImage.Dispose();
                         memImage = newImage;
@@ -172,14 +172,25 @@ namespace AirTabInputServer
                     System.IO.Directory.CreateDirectory(dir);
                 }
 
+                string tempFile = System.IO.Path.GetTempFileName();
+                memImage.Save(tempFile, ImageFormat.Jpeg);
+                memImage.Dispose();
+
                 for (int i = 0; i < 10; i++)
                 {
                     try
                     {
                         String savedFile = "";
-                        savedFile = dir + System.IO.Path.DirectorySeparatorChar + "screen" + i + ".png";
-                        memImage.Save(savedFile, ImageFormat.Png);
-                        memImage.Dispose();
+                        savedFile = dir + System.IO.Path.DirectorySeparatorChar + "screen" + i + ".jpg";
+
+                        if (System.IO.File.Exists(savedFile))
+                        {
+                            System.IO.File.Replace(tempFile, savedFile, null);
+                        }
+                        else
+                        {
+                            System.IO.File.Move(tempFile, savedFile);
+                        }
                         return savedFile;
                     }
                     catch (Exception e)

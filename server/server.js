@@ -9,6 +9,7 @@ app.listen(8090);
 app.use('/bootstrap', express.static(__dirname + '/bootstrap'));
 app.use('/chrome_app', express.static(__dirname + '/chrome_app'));
 app.use('/screenshots', express.static(__dirname + '/screenshots'));
+app.use('/', express.static(__dirname + '/'));
 app.use(express.bodyParser());
 
 var URLCOUNT = 10
@@ -37,7 +38,7 @@ function openUrl(url) {
       console.log("Exec on windows: " + execStr);
       exec(execStr);
     } else {
-      require("openurl").open(url);c
+      require("openurl").open(url);
     }
   } catch (err) {
     console.log('Unable to open url: ' + url);
@@ -48,7 +49,16 @@ function openUrl(url) {
 
 
 // Start our child process which interacts with mouse+keyboard
-proc = spawn("AirTabInputServer.exe");
+if (process.platform == 'win32') {
+  proc = spawn("AirTabInputServer.exe");
+} else {
+  // Other platforms not supported. Mock it up so we can test the server.
+  proc = {};
+  proc.stdin = {}; 
+  proc.stdout = {};
+  proc.stdin.write = function() {console.log(arguments)};
+  proc.stdout.on = function() {};
+}
 
 // Output handling from server app
 output = ""
@@ -70,27 +80,6 @@ proc.stdout.on('data', function(data) {
   }
 });
 
-app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
-app.get('/jquery.js', function(req, res) {
-  res.sendfile(__dirname + '/jquery-1.7.2.js');
-});
-app.get('/jquery.mousewheel.js', function(req, res) {
-  res.sendfile(__dirname + '/jquery.mousewheel.js');
-});
-app.get('/client.js', function(req, res) {
-  res.sendfile(__dirname + '/client.js');
-});
-app.get('/remote.html', function(req, res) {
-  res.sendfile(__dirname + '/remote.html');
-});
-app.get('/debug.html', function(req, res) {
-  res.sendfile(__dirname + '/debug.html');
-});
-app.get('/test.html', function(req, res) {
-  res.sendfile(__dirname + '/test.html');
-});
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)
   openUrl(req.body.url);

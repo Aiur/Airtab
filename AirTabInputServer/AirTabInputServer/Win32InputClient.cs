@@ -172,14 +172,17 @@ namespace AirTabInputServer
                     System.IO.Directory.CreateDirectory(dir);
                 }
 
+                string tempFile = System.IO.Path.GetTempFileName();
+                memImage.Save(tempFile, ImageFormat.Png);
+                memImage.Dispose();
+
                 for (int i = 0; i < 10; i++)
                 {
                     try
                     {
                         String savedFile = "";
                         savedFile = dir + System.IO.Path.DirectorySeparatorChar + "screen" + i + ".png";
-                        memImage.Save(savedFile, ImageFormat.Png);
-                        memImage.Dispose();
+                        System.IO.File.Replace(tempFile, savedFile, null);
                         return savedFile;
                     }
                     catch (Exception e)

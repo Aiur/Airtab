@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace AirTabInputServer
 {
@@ -10,8 +11,17 @@ namespace AirTabInputServer
 
         static void Main(string[] args)
         {
-            InputClient client = new Win32InputClient();
-            InputServer(client);
+            try
+            {
+                InputClient client = new Win32InputClient();
+                InputServer(client);
+            }
+            catch (Exception ex)
+            {
+
+                System.IO.File.WriteAllText("serverCrash.txt", ex.ToString());
+                throw;
+            }
         }
 
         static void InputServer(InputClient client)
@@ -148,10 +158,17 @@ namespace AirTabInputServer
                             break;
                         case "ss":
                             // Take screenshot - dir to save is first param, returns file saved (including dir name)
-                            string filename = client.Screenshot(parts[1]);
-                            Console.WriteLine("==screenshot==");
-                            Console.WriteLine(filename);
-                            Console.WriteLine("<><>");
+                            // image width/height are 2nd and 3rd params, anything <= 0 means ignore it and use native res
+                            int sWidth = int.Parse(parts[2]);
+                            int sHeight = int.Parse(parts[3]);
+
+                            ThreadPool.QueueUserWorkItem(o =>
+                            {
+                                string filename = client.Screenshot(parts[1], sWidth, sHeight);
+                                Console.WriteLine("==screenshot==");
+                                Console.WriteLine(filename);
+                                Console.WriteLine("<><>");
+                            });
                             break;
                         case "clear":
                             // Reset all the current keys that are down

@@ -22,6 +22,8 @@ namespace AirTabInputServer
         void MouseUp(MouseButton button);
         void MouseScroll(int scrollDelta, bool isHorizontal);
         void MouseMoveRelative(int xDiff, int yDiff);
-        string Screenshot(string dir);
+
+        // If width or height are -1, we don't use them
+        string Screenshot(string dir, int width, int height);
     }
 }

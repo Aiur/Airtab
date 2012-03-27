@@ -148,7 +148,7 @@ io.sockets.on('connection', function (socket) {
     proc.stdin.write("sx " + data + "\r\n");
   });
   socket.on("screenshot", function(data) {
-    proc.stdin.write("ss screenshots\r\n");
+    proc.stdin.write("ss screenshots " + data.width + " " + data.height + "\r\n");
     function myHandler(output) {
       if(output.indexOf("==screenshot==" >= 0)) {
         var parts = output.split("\r\n");

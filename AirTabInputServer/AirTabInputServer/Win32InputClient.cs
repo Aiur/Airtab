@@ -144,14 +144,22 @@ namespace AirTabInputServer
             SetCursorPos(point.X + xDiff, point.Y + yDiff);
         }
 
-        public string Screenshot(string dir)
+        public string Screenshot(string dir, int width, int height)
         {
             int screenW, screenH;
             GetScreenSize(out screenW, out screenH);
+
             Bitmap memImage = new Bitmap(screenW, screenH);
             Graphics g = Graphics.FromImage(memImage);
             g.CopyFromScreen(0, 0, 0, 0, memImage.Size);
 
+            if (width > 0 && height > 0)
+            {
+                Bitmap newImage = new Bitmap(width, height);
+                Graphics g2 = Graphics.FromImage(newImage);
+                g2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                memImage = new Bitmap(memImage, new Size(width, height));
+            }
 
             // create the directory if it doesn't exist - mostly for debugging
             if (!System.IO.Directory.Exists(dir))

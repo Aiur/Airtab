@@ -141,14 +141,14 @@
       socket.emit("screenshot", data);
     }
 
-    var server = "http://192.168.1.5:8090";
+    var server = "/";
     var socket = io.connect(server);
     socket.on("screenshot", function(data) {
         data.url = data.url.replace("\\", "/");
         var img = $("#screenshot");
         var trackpad = $("#trackpad");
 
-        img.attr("src", server + data.url);
+        img.attr("src", data.url);
         img.css({
           top: trackpad.offset().top,
           left: trackpad.offset().left,

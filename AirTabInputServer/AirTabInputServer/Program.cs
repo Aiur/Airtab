@@ -164,6 +164,7 @@ namespace AirTabInputServer
 
                             ThreadPool.QueueUserWorkItem(o =>
                             {
+                                Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
                                 string filename = client.Screenshot(parts[1], sWidth, sHeight);
                                 Console.WriteLine("==screenshot==");
                                 Console.WriteLine(filename);

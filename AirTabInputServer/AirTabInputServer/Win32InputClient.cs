@@ -150,35 +150,42 @@ namespace AirTabInputServer
             GetScreenSize(out screenW, out screenH);
 
             Bitmap memImage = new Bitmap(screenW, screenH);
-            Graphics g = Graphics.FromImage(memImage);
-            g.CopyFromScreen(0, 0, 0, 0, memImage.Size);
-
-            if (width > 0 && height > 0)
+            using (Graphics g = Graphics.FromImage(memImage))
             {
-                Bitmap newImage = new Bitmap(width, height);
-                Graphics g2 = Graphics.FromImage(newImage);
-                g2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                memImage = new Bitmap(memImage, new Size(width, height));
-            }
+                g.CopyFromScreen(0, 0, 0, 0, memImage.Size);
 
-            // create the directory if it doesn't exist - mostly for debugging
-            if (!System.IO.Directory.Exists(dir))
-            {
-                System.IO.Directory.CreateDirectory(dir);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                try
+                if (width > 0 && height > 0)
                 {
-                    String savedFile = "";
-                    savedFile = dir + System.IO.Path.DirectorySeparatorChar +  "screen" + i + ".png";
-                    memImage.Save(savedFile, ImageFormat.Png);
-                    return savedFile;
+                    Bitmap newImage = new Bitmap(width, height);
+                    using (Graphics g2 = Graphics.FromImage(newImage))
+                    {
+                        g2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g2.DrawImage(memImage, new Rectangle(0, 0, width, height));
+                        memImage.Dispose();
+                        memImage = newImage;
+                    }
                 }
-                catch (Exception e)
+
+                // create the directory if it doesn't exist - mostly for debugging
+                if (!System.IO.Directory.Exists(dir))
                 {
-                    Console.Error.WriteLine("Failed to capture screenshot at iteration {0}: {1}", i, e);
+                    System.IO.Directory.CreateDirectory(dir);
+                }
+
+                for (int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        String savedFile = "";
+                        savedFile = dir + System.IO.Path.DirectorySeparatorChar + "screen" + i + ".png";
+                        memImage.Save(savedFile, ImageFormat.Png);
+                        memImage.Dispose();
+                        return savedFile;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Error.WriteLine("Failed to capture screenshot at iteration {0}: {1}", i, e);
+                    }
                 }
             }
 

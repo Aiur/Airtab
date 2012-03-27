@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express.createServer();
-var io = require('socket.io').listen(app);
+var io = require('socket.io').listen(app, { log: false });
 var exec = require("child_process").exec;
 var spawn = require("child_process").spawn;
 

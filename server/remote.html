@@ -1,109 +1,164 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <style type="text/css">
-      #deadzone {
-        margin: 1px;
-        width: 100%;
-        height: 100%;
-        display: block;
-        border: solid 1px red;
-      }
-      #trackpad {
-        width: 90%;
-        height: 90%;
-        margin: auto;
-        border: solid 1px;
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="deadzone">
-      <div id="trackpad"></div>
-    </div>
-    <script type="text/javascript" src="/jquery.js"></script>
-    <script type="text/javascript" src="/jquery.mousewheel.js"></script>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-      var clipX = 0;
-      var clipY = 0;
-      var deadzone = $("#deadzone");
-      var trackpad = $("#trackpad");
-      // Resize the trackpad when the browser window resizes.
-      function adjustTrackpad() {
-        $("#trackpad").css({
-          "margin-top": deadzone.height() * 0.05
-        });
-        clipX = (deadzone.width() - trackpad.width()) / 2;
-        clipY = (deadzone.height() - trackpad.height()) / 2;
-      }
-      $(window).resize(adjustTrackpad);
-      adjustTrackpad();
+<head>
+  <title>Airtab!</title>
+  <style type="text/css">
+    body, html {
+      height:100%;
+      margin: 0;
+    }
 
-      var socket = io.connect("/");
-      var MOUSE_BUTTONS = {
-        1: "left", 
-        2: "middle", 
-        3: "right"
+    #listener {
+      margin: 1px;
+      height: 100%;
+      width: 100%;
+      display: block;
+      border: solid 1px red;
+    }
+
+    .nomouse {
+      pointer-events: none;
+    }
+
+    #screenshot {
+      position: absolute;
+      z-index: 100;
+    }
+
+    #trackpad {
+      width: 90%;
+      height: 90%;
+      margin: auto;
+      border: solid 1px;
+      display: block;
+    }
+  </style> 
+
+  <script type="text/javascript" src="/jquery.js"></script>
+  <script type="text/javascript" src="/jquery.mousewheel.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+</head>
+<body>
+
+  <div id="listener">
+    <div id="trackpad"></div>
+  </div>
+  <img class="nomouse" id="screenshot" />
+
+  <script type="text/javascript">
+    var clipX = 0;
+    var clipY = 0;
+    var deadzone = $("#listener");
+    var trackpad = $("#trackpad");
+    // Resize the trackpad when the browser window resizes.
+    function adjustTrackpad() {
+      trackpad.css({
+        "margin-top": Math.floor(deadzone.height() * 0.05)
+      });
+      clipX = (deadzone.width() - trackpad.width()) / 2;
+      clipY = (deadzone.height() - trackpad.height()) / 2;
+    }
+    $(window).resize(adjustTrackpad);
+    adjustTrackpad();
+
+    var MOUSE_BUTTONS = {
+      1: "left", 
+      2: "middle", 
+      3: "right"
+    };
+
+    function makeMouseHandler(action) {
+      return function(e) {
+        // Calculate mouse position relative to the deadzone.
+        var relX = e.pageX - $(this).offset().left;
+        var relY = e.pageY - $(this).offset().top;
+
+        // Calculate the coordinate inside the trackpad and clip anything
+        // inside the deadzone.
+        var pX = Math.min(trackpad.width(), 
+            Math.max(0, relX - clipX));
+        var pY = Math.min(trackpad.height(), 
+            Math.max(0, relY - clipY));
+
+        var data = {
+          "pX": pX / trackpad.width(),
+          "pY": pY / trackpad.height(),
+          "btn": e.which ? MOUSE_BUTTONS[e.which] : null,
+        };
+
+        socket.emit(action, data);
+      };
+    }
+
+    deadzone.mousemove(makeMouseHandler("mousemove"));
+    deadzone.mousedown(makeMouseHandler("mousedown"));
+    deadzone.mouseup(makeMouseHandler("mouseup"));
+
+    deadzone.bind("contextmenu", function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    function makeKeyHandler(action) {
+      return function(e) {
+        socket.emit(action, { keyCode: e.which });
+        if (action === "keydown" && e.keyCode === 117) { // f6
+          // ctrl f6 takes a screen shot.
+          // f6 enters full screen mode.
+          if (e.ctrlKey) {
+            socket.emit("screenshot");
+          } else {
+            console.log("cmd:fullscreen");
+            AirtabModule.postMessage("cmd:fullscreen");
+          }
+        }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      };
+    }
+    $(document).keydown(makeKeyHandler("keydown"));
+    $(document).keyup(makeKeyHandler("keyup"));
+
+    $("#listener").mousewheel(function(e, deltaX, deltaY) {
+        if (deltaY !== 0) {
+          socket.emit("scrollX", deltaY);
+        }
+        if (deltaX !== 0) {
+          socket.emit("scrollY", deltaX);
+        }
+        e.preventDefault();
+        return false;
+    });
+
+    function screenshot() {
+      var data = {
+        width: trackpad.width(),
+        height: trackpad.height()
       };
 
-      function makeMouseHandler(action) {
-        return function(e) {
-          // Calculate mouse position relative to the deadzone.
-          var relX = e.pageX - $(this).offset().left;
-          var relY = e.pageY - $(this).offset().top;
+      socket.emit("screenshot", data);
+    }
 
-          // Calculate the coordinate inside the trackpad and clip anything
-          // inside the deadzone.
-          var pX = Math.min(trackpad.width(), 
-              Math.max(0, relX - clipX));
-          var pY = Math.min(trackpad.height(), 
-              Math.max(0, relY - clipY));
+    var server = "http://192.168.1.5:8090";
+    var socket = io.connect(server);
+    socket.on("screenshot", function(data) {
+        data.url = data.url.replace("\\", "/");
+        var img = $("#screenshot");
+        var trackpad = $("#trackpad");
 
-          var data = {
-            "pX": pX / trackpad.width(),
-            "pY": pY / trackpad.height(),
-            "btn": e.which ? MOUSE_BUTTONS[e.which] : null,
-          };
+        img.attr("src", server + data.url);
+        img.css({
+          top: trackpad.offset().top,
+          left: trackpad.offset().left,
+          width: trackpad.width(),
+          height: trackpad.height(),
+        });
+    });
 
-          socket.emit(action, data);
-        };
-      }
-
-      deadzone.mousemove(makeMouseHandler("mousemove"));
-      deadzone.mousedown(makeMouseHandler("mousedown"));
-      deadzone.mouseup(makeMouseHandler("mouseup"));
-
-      deadzone.bind("contextmenu", function(e) {
-          e.preventDefault();
-          return false;
-      });
-
-      function makeKeyHandler(action) {
-        return function(e) {
-          socket.emit(action, { keyCode: e.which });
-          e.stopPropagation();
-          e.preventDefault();
-          return false
-        };
-      }
-      $(document).keydown(makeKeyHandler("keydown"));
-      $(document).keyup(makeKeyHandler("keyup"));
-
-      $("#deadzone").mousewheel(function(e, deltaX, deltaY) {
-          if (deltaY !== 0) {
-            socket.emit("scrollX", deltaY);
-          }
-          if (deltaX !== 0) {
-            socket.emit("scrollY", deltaX);
-          }
-          e.preventDefault();
-          return false;
-      });
-
-      $(window).blur(function() {
-        socket.emit("clear", {});
-      });
-    </script>
-  </body>
+    setInterval("screenshot()", 1000);
+  </script>
+</body>
 </html>
+

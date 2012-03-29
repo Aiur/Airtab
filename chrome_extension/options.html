@@ -6,11 +6,9 @@
       function save() {
         var select = $("mode");
         var host = $("host");
-        var port = $("port");
 
         localStorage["mode"] = select.children[select.selectedIndex].value;
         localStorage["host"] = host.value;
-        localStorage["port"] = port.value;
         chrome.extension.getBackgroundPage().reload();
       }
 
@@ -18,7 +16,6 @@
         var mode = localStorage["mode"] || "client";
         var select = $("mode");
         var host = $("host");
-        var port = $("port");
         for (var i = 0; i < select.children.length; i++) {
           if (select.children[i].value === mode) {
             select.children[i].selected = true;
@@ -27,7 +24,6 @@
         }
 
         host.value = localStorage["host"] || "";
-        port.value = localStorage["port"] || "";
       }
     </script>
   </head>
@@ -36,8 +32,7 @@
       <option value="server">Server</option>
       <option value="client">Client</option>
     </select>
-    <label>Server Host/IP: <input id="host" type="text" /></label>
-    <label>Server Port: <input id="port" type="text" /></label>
+    <label>Server Host/IP (e.g. http://192.168.1.2:8090): <input id="host" type="text" /></label>
 
     <button onclick="save()">Save</button>
 

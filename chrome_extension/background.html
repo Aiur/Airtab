@@ -11,7 +11,6 @@
         urlPatterns: ["http://*/*", "https://*/*", "ftp://*/*"]
       };
       
-      
       // Figure out which URL to send to the server based on the context it was clicked in
       function contextClick(info, tab) {
         var url = info.linkUrl
@@ -95,9 +94,7 @@
           postUrl: null,
         };
 
-        state.postUrl = [
-          "http://", localStorage["host"], ":", localStorage["port"], "/newUrl"
-        ].join("");
+        state.postUrl = [localStorage["host"], "/newUrl"].join("");
       }
 
       reload();

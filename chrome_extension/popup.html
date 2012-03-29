@@ -1,14 +1,54 @@
 <html>
   <head>
-  </head>
+    <style>
+      html,body {
+        width: 750px;
+        height: 550px;
+        font-family: Helvetica, Arial, sans-serif;
+        text-align: center;
+      }
+      iframe {
+        overflow: hidden;
+        border: 0;
+        margin: auto;
+      }
+      .button {
+        cursor: pointer;        
+        width: 100px;
+        border: solid 1px #B9DEF4;
+        border-radius: 5px;
+        text-align: center;
+        padding: 3px 5px;
+        margin: 2px;
+      }
+      .button:hover {
+        background: #CADEF4;
+      }
+    </style>
   <body>
-
-    <div id="message"></div>
+    <span id="send" class="button">Send Tab</span>
+    <span id="remote" class="button">Full Remote</span>
+    <span id="message"></span>
     <script>
-      chrome.extension.getBackgroundPage().sendTab(function(res) {
-        var message = document.getElementById('message');
-        message.innerHTML = res;
-      });
+      var iframe = document.createElement("iframe");
+      iframe.src = localStorage["host"] + "/remote.html";
+      iframe.style.width = "700px";
+      iframe.style.height = "550px";
+      iframe.scrolling = "no";
+      document.body.appendChild(iframe);
+      var send = document.getElementById("send");
+      send.onclick = function(e) {
+        chrome.extension.getBackgroundPage().sendTab(function(res) {
+          var message = document.getElementById("message");
+          message.innerHTML = res;
+        });
+      }
+      var remote = document.getElementById("remote");
+      remote.onclick = function() {
+        var url = localStorage["host"] + "/remote.html";
+        chrome.tabs.create({url: url});
+      }
     </script>
-  </body>
+</body>
 </html>
+

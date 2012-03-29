@@ -4,12 +4,20 @@
     <head>
         <Title>Submit Links to Aiur</Title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
         <style type="text/css">
             body {
                 padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
             }
+            .leftButton {
+                margin-right: 20px;
+            }
+            .localLink {
+                display: inline-block;
+                height: 35px;
+                width: 90%;
+            }
         </style>
-        <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     </head>
     <body">
         <div class="navbar navbar-fixed-top">
@@ -23,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="hero-unit">
+        <div class="hero-unit" style="text-align: center;">
             <h3>Enter a URL to open on Aiur</h3>
             <p>
                 <form onsubmit="sendUrl(); return false;">
@@ -41,9 +49,9 @@
             <h2>Recent Links</h2>
 
             <br />
-            <ul id="lastUrls">
+            <div id="lastUrls">
                 Loading recent links...
-            </ul>
+            </div>
         </div>
 
         <script type="text/javascript" src="/jquery.js"></script>

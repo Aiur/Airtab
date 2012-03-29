@@ -28,6 +28,7 @@
   <body>
     <span id="send" class="button">Send Tab</span>
     <span id="remote" class="button">Full Remote</span>
+    <span id="recent" class="button">Recent Links</span>
     <span id="message"></span>
     <script>
       var iframe = document.createElement("iframe");
@@ -47,6 +48,11 @@
       remote.onclick = function() {
         var url = localStorage["host"] + "/remote.html";
         chrome.tabs.create({url: url});
+      }
+      var links = document.getElementById("recent");
+      links.onclick = function() {
+        var url = localStorage["host"];
+        chrome.tabs.create({url:url});
       }
     </script>
 </body>

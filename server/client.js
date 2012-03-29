@@ -34,19 +34,33 @@ socket.on('lastUrls', function(data) {
   for(var i = 0; i < data.urls.length; i++) {
     var link = data.urls[i];
     var ahref = $('<a />');
-    ahref.attr('href', '');
-    ahref.text(data.urls[i]);
-    ahref.bind('click', (function(urlParam) {
-      return function() {
-        sendExplicitUrl(urlParam);
-      };
-    })(data.urls[i]));
+    ahref.addClass('localLink');
+    ahref.attr('href', link);
+    ahref.attr('target', '_blank');
+    var textLink = link;
+    if (textLink.length > 100) {
+      textLink = textLink.substring(0, 90) + " [...]";
+    }
+    ahref.text(textLink);
     //var onclick = "onclick=\"sendExplicitUrl('" + data.urls[i] + "')\"";
     //var ahref = '<a href="?" ' + onclick + '>' + data.urls[i] + '</a>';
-    var liElm = $('<li />');
+    var liElm = $('<div />');
+
+    var serverBtn = $('<a />');
+    serverBtn.addClass('btn')
+    serverBtn.addClass('leftButton')
+    serverBtn.attr('href', '')
+    serverBtn.bind('click', (function(urlParam) {
+      return function() {
+        sendExplicitUrl(urlParam);
+        return false;
+      };
+    })(link));
+    serverBtn.text('Send Again');
+
+    liElm.append(serverBtn);
     liElm.append(ahref);
     $("#lastUrls").append(liElm);
-    $("#lastUrls").append("<br />");
   }
 });
 

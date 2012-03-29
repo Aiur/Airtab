@@ -9,6 +9,9 @@
       padding: 0;
       overflow: hidden;
       text-align: center;
+      background-color: #2c2c2c;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: white;
     }
 
     #listener {
@@ -16,7 +19,8 @@
       height: 95%;
       width: 95%;
       display: block;
-      border: solid 1px red;
+      border: solid 1px #eee;
+      background-color: #eee;
     }
 
     .nomouse {
@@ -29,13 +33,23 @@
       z-index: 100;
     }
 
+    #instructions {
+        margin: auto;
+        width: 60%;
+        text-align: center;
+        font-size: 32px;
+        color: black;
+        position: relative;
+    }
+
     #trackpad {
       width: 90%;
       height: 90%;
       margin-left: auto;
       margin-right: auto;
-      border: solid 1px;
+      border: solid 1px #0074CC;
       display: block;
+      background-color: #eee;
     }
   </style> 
 
@@ -51,7 +65,9 @@
   </label>
 
   <div id="listener">
-    <div id="trackpad"></div>
+      <div id="trackpad">
+          <div id="instructions" class="nomouse">Move the mouse over this area to move the mouse on your server! Keyboard events will also be sent to the server.</span>
+      </div>
   </div>
   <img class="nomouse" id="screenshot" />
   <img class="nomouse" id="screenshot2" />
@@ -137,6 +153,7 @@
     var socket = io.connect(server);
     var screenshot1 = $("#screenshot");
     var screenshot2 = $("#screenshot2");
+    var instructions = $("#instructions");
 
     function loadImages() {
       screenshot1.show();
@@ -169,6 +186,9 @@
       clipX = (deadzone.width() - trackpad.width()) / 2;
       clipY = (deadzone.height() - trackpad.height()) / 2;
 
+      instructions.css({
+        top: trackpad.height() / 2 - instructions.height()
+      });
       screenshot1.css({
         top: trackpad.offset().top,
         left: trackpad.offset().left,

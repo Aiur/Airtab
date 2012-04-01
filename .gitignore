@@ -6,3 +6,7 @@ AirtabInputServer/*/obj/
 *.o
 *.nexe
 *.swp
+*.crx
+*.pem
+node_modules
+*.pdb

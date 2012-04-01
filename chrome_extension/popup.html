@@ -25,6 +25,9 @@
         background: #CADEF4;
       }
     </style>
+    <script src="jquery.js"></script>
+    <script src="common.js"></script>
+  </head>
   <body>
     <span id="send" class="button">Send Tab</span>
     <span id="remote" class="button">Full Remote</span>
@@ -32,7 +35,7 @@
     <span id="message"></span>
     <script>
       var iframe = document.createElement("iframe");
-      iframe.src = localStorage["host"].replace("/$", "") + "/remote.html";
+      iframe.src = airtab.host() + "/remote.html";
       iframe.style.width = "700px";
       iframe.style.height = "550px";
       iframe.scrolling = "no";
@@ -46,12 +49,12 @@
       }
       var remote = document.getElementById("remote");
       remote.onclick = function() {
-        var url = localStorage["host"] + "/remote.html";
+        var url = airtab.host() + "/remote.html";
         chrome.tabs.create({url: url});
       }
       var links = document.getElementById("recent");
       links.onclick = function() {
-        var url = localStorage["host"];
+        var url = airtab.host();
         chrome.tabs.create({url:url});
       }
     </script>

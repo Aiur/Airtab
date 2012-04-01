@@ -3,7 +3,7 @@ airtab = {};
 airtab.host = function(host) {
   if (typeof(host) === 'undefined') {
     var host = localStorage['host'] || '';
-    host.replace('/$', '');
+    host = host.replace(/\/$/, '');
     return host;
   } else {
     host = host || '';

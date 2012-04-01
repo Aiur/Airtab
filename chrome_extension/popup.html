@@ -32,7 +32,7 @@
     <span id="message"></span>
     <script>
       var iframe = document.createElement("iframe");
-      iframe.src = localStorage["host"] + "/remote.html";
+      iframe.src = localStorage["host"].replace("/$", "") + "/remote.html";
       iframe.style.width = "700px";
       iframe.style.height = "550px";
       iframe.scrolling = "no";

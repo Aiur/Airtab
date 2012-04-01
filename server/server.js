@@ -80,11 +80,21 @@ proc.stdout.on('data', function(data) {
   }
 });
 
+// Test that the server is running.
+app.get('/test', function(req, res) {
+  var data = {"success": true};
+  if (req.query["callback"]) {
+    data = req.query["callback"] + "(" + JSON.stringify(data) + ")";
+  }
+  res.send(data);
+});
+
 app.post('/newUrl', function(req, res) {
   console.log('NewUrl Posted: ' + req.body.url)
   openUrl(req.body.url);
   res.send({'status': 'ok'});
 });
+
 io.sockets.on('connection', function (socket) {
   socket.on('newUrl', function (data) {
     console.log(data);

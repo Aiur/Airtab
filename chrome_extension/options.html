@@ -1,43 +1,107 @@
 <html>
   <head>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        background: #2c2c2c;
+      }
+      h1 {
+        text-align: center;
+      }
+      input {
+        font-size: 26px;
+      }
+      #content {
+        position: relative;
+        width: 600px;
+        height: 250px;
+        margin: 100px auto;
+        border: 5px solid #0074CC;
+        border-radius: 10px;
+        padding: 20px;
+        color: #2c2c2c;
+        background: white;
+      }
+      #save {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        width: 100px;
+      }
+      .button {
+        border: 2px solid #0074CC;
+        width: auto;
+        padding: 10px;
+        display: inline-block;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+      }
+      .success {
+        color: green;
+      }
+      .fail {
+        color: red;
+      }
+    </style>
+    <script src="jquery.js"></script>
+    <script src="common.js"></script>
+
     <script>
-      function $(id) { return document.getElementById(id); }
-
       function save() {
-        var select = $("mode");
-        var host = $("host");
+        var host = $('#host');
+        var elem = $('#message');
+        airtab.host(host.val());
 
-        localStorage["mode"] = select.children[select.selectedIndex].value;
-        localStorage["host"] = host.value;
+        elem.text('Saved. testing connection...');
+        elem.attr('class', '');
+        elem.show();
+
+        airtab.test(function(data) {
+          var message;
+          if (data.succeed) {
+            elem.attr('class', 'success');
+            message = 'successfully connected to the server';
+          } else {
+            elem.attr('class', 'fail');
+            message = 'successfully connected to the server';
+            message = [data.message, ': could not connect to the server.',
+              ' check the host settings and try again'].join('');
+          }
+          elem.text(message).delay(5000).fadeOut(500);
+        });
+
         chrome.extension.getBackgroundPage().reload();
       }
 
       function restore() {
-        var mode = localStorage["mode"] || "client";
-        var select = $("mode");
-        var host = $("host");
-        for (var i = 0; i < select.children.length; i++) {
-          if (select.children[i].value === mode) {
-            select.children[i].selected = true;
-            break;
-          }
-        }
-
-        host.value = localStorage["host"] || "";
+        var host = $("#host");
+        host.val(airtab.host());
       }
     </script>
   </head>
   <body>
-    <select id="mode">
-      <option value="server">Server</option>
-      <option value="client">Client</option>
-    </select>
-    <label>Server Host/IP (e.g. http://192.168.1.2:8090): <input id="host" type="text" /></label>
+    <h1>Airtab options</h1>
+    <div id="content">
+      <h4>Configure the url where your HT PC server is running.</h4>
 
-    <button onclick="save()">Save</button>
+      <form id="settings">
+        <label>Server Host/IP (e.g. http://192.168.1.2:8090):<br/>
+        <input id="host" type="text" style="width: 600px;" /></label>
+        <p id="message"></p>
 
+        <input type="submit" id="save" class="button" value="Save" />
+      </form>
+    </div>
     <script>
         restore();
+        $('#settings').submit(function(e) {
+          save();
+          e.preventDefault();
+          return false;
+        });
+
     </script>
   </body>
 </html>

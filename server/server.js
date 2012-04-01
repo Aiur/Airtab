@@ -4,6 +4,9 @@ var io = require('socket.io').listen(app, { log: false });
 var exec = require("child_process").exec;
 var spawn = require("child_process").spawn;
 
+// set cwd=script path
+process.chdir(__dirname);
+
 app.listen(8090);
 // bootstrap
 app.use('/bootstrap', express.static(__dirname + '/bootstrap'));

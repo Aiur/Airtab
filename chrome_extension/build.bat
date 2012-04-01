@@ -2,5 +2,5 @@ pushd ..
 set extensiondir=%CD%
 chrome --pack-extension=%extensiondir%\chrome_extension --pack-extension-key=%extensiondir%\chrome_extension.pem
 
-mv chrome_extension.crx server\airtab.crx
+move chrome_extension.crx server\airtab.crx
 popd 

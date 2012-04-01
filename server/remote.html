@@ -174,8 +174,7 @@
 
     socket.on("screenshot", function(data) {
         console.log('received');
-        data.url = data.url.replace("\\", "/");
-        screenshot1[0].src = server + data.url;
+        screenshot1[0].src = data.url;
     });
 
     // Resize the trackpad when the browser window resizes.

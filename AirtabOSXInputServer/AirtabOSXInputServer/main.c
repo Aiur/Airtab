@@ -1,11 +1,3 @@
-//
-//  main.c
-//  AirtabOSXInputServer
-//
-//  Created by Charles Ma on 4/3/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
-//
-
 #include <ctype.h>
 #include <malloc/malloc.h>
 #include <stdio.h>
@@ -16,7 +8,6 @@
 #define CMD_LEN 20
 #define CMD_ARGLEN 20
 
-// Ineficient as fuck data structure for storing commands.
 typedef struct _Command {
     char cmd[CMD_LEN];
     char arg1[CMD_ARGLEN];
@@ -38,9 +29,12 @@ void parseCommand(Command *cmd, char *input);
 int readLine(char *buffer, ssize_t len);
 bool execCommand(Command *cmd);
 void mousemove(double x, double y);
+void mousedown(char btn);
+void mouseup(char btn);
 void keyup(int keycode);
 void keydown(int keycode);
-
+CGPoint mousePos();
+void screenshot();
 
 size_t g_screenWidth, g_screenHeight;
 
@@ -78,6 +72,10 @@ bool execCommand(Command *cmd) {
     } else if (strcmp(cmd->cmd, "ku") == 0) {
         key = (int)strtol(cmd->arg1, NULL, 10);
         keyup(key);
+    } else if (strcmp(cmd->cmd, "md") == 0) {
+        mousedown(cmd->arg1[0]);
+    } else if (strcmp(cmd->cmd, "mu") == 0) {
+        mouseup(cmd->arg1[0]);
     }
     return false;
 }
@@ -96,8 +94,73 @@ int readLine(char *buffer, ssize_t len) {
 }
 
 void mousemove(double x, double y) {
-    CGEventRef event = CGEventCreateMouseEvent(NULL, NX_MOUSEMOVED, CGPointMake(x * g_screenWidth, y * g_screenHeight), (CGMouseButton)NULL);
+    CGEventRef event = CGEventCreateMouseEvent(NULL, kCGEventMouseMoved	, CGPointMake(x * g_screenWidth, y * g_screenHeight), (CGMouseButton)NULL);
     CGEventPost(kCGHIDEventTap, event);
+    CFRelease(event);
+}
+
+void mousedown(char btn) {
+    CGEventType eventType = NX_NULLEVENT;
+    CGMouseButton button;
+    switch (btn) {
+        case 'l':
+            eventType = kCGEventLeftMouseDown;
+            button = kCGMouseButtonLeft;
+            break;
+        case 'r':
+            eventType = kCGEventRightMouseDown;
+            button = kCGMouseButtonRight;
+            break;
+        case 'm':
+            eventType = kCGEventOtherMouseDown;
+            button = kCGMouseButtonCenter;
+        default:
+            break;
+    }
+    
+    if (eventType != kCGEventNull) {
+        CGEventRef event = CGEventCreateMouseEvent(NULL, eventType, mousePos(), button);
+        CGEventPost(kCGHIDEventTap, event);
+        CFRelease(event);
+    }
+}
+
+void mouseup(char btn) {
+    CGEventType eventType;
+    CGMouseButton button;
+    switch (btn) {
+        case 'l':
+            eventType = kCGEventLeftMouseDown;
+            button = kCGMouseButtonLeft;
+            break;
+        case 'r':
+            eventType = kCGEventRightMouseDown;
+            button = kCGMouseButtonRight;
+            break;
+        case 'm':
+            eventType = kCGEventOtherMouseDown;
+            button = kCGMouseButtonCenter;
+        default:
+            eventType = kCGEventNull;
+            break;
+    }
+    
+    if (eventType != kCGEventNull) {
+        CGEventRef event = CGEventCreateMouseEvent(NULL, eventType, mousePos(), button);
+        CGEventPost(kCGHIDEventTap, event);
+        CFRelease(event);
+    }
+}
+
+void screenshot() {
+    
+}
+
+CGPoint mousePos() {
+    CGEventRef event = CGEventCreate(nil);
+    CGPoint loc = CGEventGetLocation(event);
+    CFRelease(event);
+    return loc;
 }
 
 // TODO: map between browser keycodes and osx keycodes
@@ -105,11 +168,13 @@ void mousemove(double x, double y) {
 void keydown(int keycode) {
     CGEventRef event = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)keycode, true);
     CGEventPost(kCGHIDEventTap, event);
+    CFRelease(event);
 }
 
 void keyup(int keycode) {
     CGEventRef event = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)keycode, false);
     CGEventPost(kCGHIDEventTap, event);
+    CFRelease(event);
 }
 
 int main (int argc, const char * argv[])

@@ -24,21 +24,23 @@ typedef struct _Command {
  * @param buflen - Length of the buffer.
  * @return The index after the token. 
  */
-int nextToken(char *input, ssize_t len, int i, char *buffer, ssize_t buflen);
+int nextToken(char *input, size_t len, int i, char *buffer, size_t buflen);
 void parseCommand(Command *cmd, char *input);
-int readLine(char *buffer, ssize_t len);
+int readLine(char *buffer, size_t len);
 bool execCommand(Command *cmd);
 void mousemove(double x, double y);
 void mousedown(char btn);
 void mouseup(char btn);
 void keyup(int keycode);
 void keydown(int keycode);
-CGPoint mousePos();
-void screenshot();
+void scrollX(double amount);
+void scrollY(double amount);
+CGPoint mousePos(void);
+void screenshot(void);
 
 size_t g_screenWidth, g_screenHeight;
 
-int nextToken(char *input, ssize_t len, int i, char *buffer, ssize_t buflen) {
+int nextToken(char *input, size_t len, int i, char *buffer, size_t buflen) {
     int bufIndex = 0;
     while(i < len && isspace(input[i])) 
         i++;
@@ -76,11 +78,16 @@ bool execCommand(Command *cmd) {
         mousedown(cmd->arg1[0]);
     } else if (strcmp(cmd->cmd, "mu") == 0) {
         mouseup(cmd->arg1[0]);
+    } else if (strcmp(cmd->cmd, "sy") == 0) {
+        scrollY(strtod(cmd->arg1, NULL));
+    } else if (strcmp(cmd->cmd, "sx") == 0) {
+        scrollX(strtod(cmd->arg1, NULL));
     }
+    
     return false;
 }
 
-int readLine(char *buffer, ssize_t len) {
+int readLine(char *buffer, size_t len) {
     int i = 0;
     char c;
     c = getchar();
@@ -150,6 +157,18 @@ void mouseup(char btn) {
         CGEventPost(kCGHIDEventTap, event);
         CFRelease(event);
     }
+}
+
+void scrollX(double amount) {
+    CGEventRef event = CGEventCreateScrollWheelEvent(NULL, kCGEventMouseSubtypeDefault, 2, 0, amount);
+    CGEventPost(kCGHIDEventTap, event);
+    CFRelease(event);
+}
+
+void scrollY(double amount) {
+    CGEventRef event = CGEventCreateScrollWheelEvent(NULL, kCGEventMouseSubtypeDefault, 1, amount);
+    CGEventPost(kCGHIDEventTap, event);
+    CFRelease(event);
 }
 
 void screenshot() {

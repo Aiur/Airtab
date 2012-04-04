@@ -57,7 +57,7 @@ void parseCommand(Command *cmd, char *input) {
     i = nextToken(input, len, i, cmd->cmd, CMD_LEN);
     i = nextToken(input, len, i, cmd->arg1, CMD_ARGLEN);
     i = nextToken(input, len, i, cmd->arg2, CMD_ARGLEN);
-    i = nextToken(input, len, i, cmd->arg3, CMD_ARGLEN);
+    nextToken(input, len, i, cmd->arg3, CMD_ARGLEN);
 }
 
 bool execCommand(Command *cmd) {
@@ -91,7 +91,7 @@ int readLine(char *buffer, size_t len) {
     int i = 0;
     char c;
     c = getchar();
-    while (i < len - 1 && (c != '\n' && c != '\r')) {
+    while (i < len - 1 && (c != '\n')) {
         buffer[i++] = c;
         c = getchar();
     }
@@ -147,6 +147,7 @@ void mouseup(char btn) {
         case 'm':
             eventType = kCGEventOtherMouseDown;
             button = kCGMouseButtonCenter;
+            break;
         default:
             eventType = kCGEventNull;
             break;
@@ -209,7 +210,6 @@ int main (int argc, const char * argv[])
         readLine(lineBuff, 100);
         parseCommand(&cmd, lineBuff);
         execCommand(&cmd);
-        printf("%s\n", lineBuff);
     }
     
     return 0;

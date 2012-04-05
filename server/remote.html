@@ -27,6 +27,23 @@
       pointer-events: none;
     }
 
+    #menu {
+      display: none;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      right: 0;
+      width: 100px;
+      border: solid 1px #0074CC;
+      background: #eee;
+      color: black;
+    }
+
+    .button {
+      border: solid 1px #0074CC;
+      padding: 5px;
+    }
+
     #screenshot,
     #screenshot2 {
       position: absolute;
@@ -67,11 +84,21 @@
   <div id="listener">
       <div id="trackpad">
         <div id="instructions" class="nomouse">
-          Move the mouse over this area to move the mouse on your server! Keyboard events will also be sent to the server.</span>
+          Move the mouse over this area to move the mouse on your server! Keyboard events will also be sent to the server.</div>
       </div>
   </div>
   <img class="nomouse" id="screenshot" />
   <img class="nomouse" id="screenshot2" />
+
+  <div id="menu">
+    <div id="play" class="button">play/pause</div>
+    <div id="stop" class="button">stop</div>
+    <div id="next" class="button">next</div>
+    <div id="prev" class="button">prev</div>
+    <div id="mute" class="button">mute</div>
+    <div id="volume-up" class="button">+</div>
+    <div id="volume-down" class="button">-</div>
+  </div>
 
   <script type="text/javascript">
     var clipX = 0;
@@ -150,7 +177,7 @@
       socket.emit("screenshot", data);
     }
 
-    var server = "/";
+    var server = "http://192.168.1.5:8090";
     var socket = io.connect(server);
     var screenshot1 = $("#screenshot");
     var screenshot2 = $("#screenshot2");
@@ -207,6 +234,37 @@
         } else {
           screenshot1.fadeOut(5000);
           screenshot2.fadeOut(5000);
+        }
+    });
+
+    // Media and volumn buttons.
+    function bindButton(buttonId, keyCode) {
+      $('#' + buttonId).click(function() {
+        socket.emit('keydown', { keyCode: keyCode });
+        socket.emit('keyup', { keyCode: keyCode });
+      });
+    }
+    bindButton('play', 0xB3);
+    bindButton('stop', 0xB2);
+    bindButton('prev', 0xB1);
+    bindButton('next', 0xB0);
+    bindButton('mute', 0xAD);
+    bindButton('volume-down', 0xAE);
+    bindButton('volume-up', 0xAF);
+
+    var menu = $('#menu');
+    menu.isVisible = false;
+
+    // show or hide the menu based on where the mouse is.
+    $(document.body).mousemove(function(e) {
+        var dist = $(document.body).width() - e.pageX;
+        console.log(menu.width());
+        if (!menu.isVisible && dist < 20) {
+          menu.show();
+          menu.isVisible = true;
+        } else if(menu.isVisible && dist > menu.width()) {
+          menu.hide();
+          menu.isVisible = false;
         }
     });
   </script>

@@ -108,12 +108,12 @@ io.sockets.on('connection', function (socket) {
     socket.emit('lastUrls', { urls: lastUrls });
   });
   socket.on("mousemove", function(data) {
-    console.log(data);
+    // console.log(data);
     proc.stdin.write("mm " + data.pX + " " + data.pY + LINE_ENDING);
   });
   socket.on("mousemoveRelative", function(data) {
     proc.stdin.write("mmr " + data.dX + " " + data.dY + LINE_ENDING);
-    console.log(data);
+    // console.log(data);
   });
   socket.on("mouseup", function(data) {
     if (!data.noPosition) {

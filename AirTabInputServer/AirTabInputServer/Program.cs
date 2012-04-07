@@ -18,7 +18,6 @@ namespace AirTabInputServer
             }
             catch (Exception ex)
             {
-
                 System.IO.File.WriteAllText("serverCrash.txt", ex.ToString());
                 throw;
             }
@@ -47,6 +46,7 @@ namespace AirTabInputServer
             string line;
             while ((line = Console.ReadLine()) != null)
             {
+                client.ResetScreenSaver();
                 // we can process multiple commands in a single line separated by ;
                 foreach (string linePart in line.Split(new char[]{';'}, StringSplitOptions.RemoveEmptyEntries))
                 {

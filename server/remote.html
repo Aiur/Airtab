@@ -99,6 +99,8 @@
     <div id="mute" class="button">mute</div>
     <div id="volume-up" class="button">+</div>
     <div id="volume-down" class="button">-</div>
+    <div id="f4" class="button">F4</div>
+    <div id="f11" class="button">F11</div>
   </div>
 
   <script type="text/javascript">
@@ -178,7 +180,7 @@
       socket.emit("screenshot", data);
     }
 
-    var server = "http://192.168.1.5:8090";
+    var server = "/";
     var socket = io.connect(server);
     var screenshot1 = $("#screenshot");
     var screenshot2 = $("#screenshot2");
@@ -252,6 +254,9 @@
     bindButton('mute', 0xAD);
     bindButton('volume-down', 0xAE);
     bindButton('volume-up', 0xAF);
+
+    bindButton('f4', 0x73);
+    bindButton('f11', 0x7A);
 
     var menu = $('#menu');
     menu.isVisible = false;

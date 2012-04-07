@@ -28,7 +28,7 @@ function openUrl(url) {
   }
 
   try {
-    if (process.platform=='win32') {
+    if (process.platform == 'win32') {
       escapeChars = "^<>?{}&";
       for(var i = 0; i < escapeChars.length; i++) {
         url = url.replace(escapeChars[i], "^" + escapeChars[i]);
@@ -47,10 +47,13 @@ function openUrl(url) {
   io.sockets.emit('lastUrls', { urls: lastUrls });
 }
 
-
+var LINE_ENDING = "\r\n";
 // Start our child process which interacts with mouse+keyboard
 if (process.platform == 'win32') {
   proc = spawn("AirTabInputServer.exe");
+} else if (process.platform == 'darwin') {
+  proc = spawn("./AirtabOSXInputServer");
+  LINE_ENDING = "\n";
 } else {
   // Other platforms not supported. Mock it up so we can test the server.
   proc = {};
@@ -105,52 +108,52 @@ io.sockets.on('connection', function (socket) {
     socket.emit('lastUrls', { urls: lastUrls });
   });
   socket.on("mousemove", function(data) {
-    proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
-    //console.log(data);
+    // console.log(data);
+    proc.stdin.write("mm " + data.pX + " " + data.pY + LINE_ENDING);
   });
   socket.on("mousemoveRelative", function(data) {
-    proc.stdin.write("mmr " + data.dX + " " + data.dY + "\r\n");
-    console.log(data);
+    proc.stdin.write("mmr " + data.dX + " " + data.dY + LINE_ENDING);
+    // console.log(data);
   });
   socket.on("mouseup", function(data) {
     if (!data.noPosition) {
-      proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+      proc.stdin.write("mm " + data.pX + " " + data.pY + LINE_ENDING);
     }
-    proc.stdin.write("mu " + data.btn[0] + "\r\n");
+    proc.stdin.write("mu " + data.btn[0] + LINE_ENDING);
     //console.log(data);
   });
   socket.on("mousedown", function(data) {
     if (!data.noPosition) {
-      proc.stdin.write("mm " + data.pX + " " + data.pY + "\r\n");
+      proc.stdin.write("mm " + data.pX + " " + data.pY + LINE_ENDING);
     }
-    proc.stdin.write("md " + data.btn[0] + "\r\n");
+    proc.stdin.write("md " + data.btn[0] + LINE_ENDING);
     //console.log(data);
   });
   socket.on("keydown", function(data) {
-    proc.stdin.write("kd " + data.keyCode + "\r\n");
+    proc.stdin.write("kd " + data.keyCode + LINE_ENDING);
   });
   socket.on("keyup", function(data) {
-    proc.stdin.write("ku " + data.keyCode + "\r\n");
+    proc.stdin.write("ku " + data.keyCode + LINE_ENDING);
   });
   socket.on("disconnect", function(data) {
-    proc.stdin.write("clear\r\n");
+    proc.stdin.write("clear" + LINE_ENDING);
   });
   socket.on("clear", function() {
-    proc.stdin.write("clear\r\n");
+    proc.stdin.write("clear" + LINE_ENDING);
   });
   socket.on("scrollY", function(data) {
     //console.log("scrollY " + data);
-    proc.stdin.write("sy " + data + "\r\n");
+    proc.stdin.write("sy " + data + LINE_ENDING);
   });
   socket.on("scrollX", function(data) {
     //console.log("scrollX " + data);
-    proc.stdin.write("sx " + data + "\r\n");
+    proc.stdin.write("sx " + data + LINE_ENDING);
   });
   socket.on("screenshot", function(data) {
-    proc.stdin.write("ss screenshots " + data.width + " " + data.height + "\r\n");
+    proc.stdin.write("ss screenshots " + data.width + " " + data.height + LINE_ENDING);
     function myHandler(output) {
       if(output.indexOf("==screenshot==" >= 0)) {
-        var parts = output.split("\r\n");
+        var parts = output.split(LINE_ENDING);
         socket.emit("screenshot", {url: "/" + parts[1].replace("\\", "/") });
         outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
       }
@@ -158,7 +161,7 @@ io.sockets.on('connection', function (socket) {
     outputHandlers.push(myHandler);
   });
   socket.on("debugInputServer", function() {
-    proc.stdin.write("debug\r\n");
+    proc.stdin.write("debug" + LINE_ENDING);
     function myHandler(output) {
       if(output.indexOf("==debug==" >= 0)) {
         socket.emit("debugInputServer", { text: output });

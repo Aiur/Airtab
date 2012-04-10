@@ -1,5 +1,6 @@
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="common.css" />
     <style>
       html,body {
         width: 750px;
@@ -32,31 +33,63 @@
     <span id="send" class="button">Send Tab</span>
     <span id="remote" class="button">Full Remote</span>
     <span id="recent" class="button">Recent Links</span>
-    <span id="message"></span>
+    <div id="message"></div>
     <script>
-      var iframe = document.createElement("iframe");
-      iframe.src = airtab.host() + "/remote.html";
-      iframe.style.width = "700px";
-      iframe.style.height = "550px";
-      iframe.scrolling = "no";
-      document.body.appendChild(iframe);
-      var send = document.getElementById("send");
-      send.onclick = function(e) {
-        chrome.extension.getBackgroundPage().sendTab(function(res) {
-          var message = document.getElementById("message");
-          message.innerHTML = res;
+      function start() {
+        var iframe = document.createElement("iframe");
+        iframe.src = airtab.host() + "/remote.html";
+        iframe.style.width = "700px";
+        iframe.style.height = "550px";
+        iframe.scrolling = "no";
+        document.body.appendChild(iframe);
+        var send = document.getElementById("send");
+        send.onclick = function(e) {
+          chrome.extension.getBackgroundPage().sendTab(function(res) {
+            var message = document.getElementById("message");
+            message.innerHTML = res;
+          });
+        }
+        var remote = document.getElementById("remote");
+        remote.onclick = function() {
+          var url = airtab.host() + "/remote.html";
+          chrome.tabs.create({url: url});
+        }
+        var links = document.getElementById("recent");
+        links.onclick = function() {
+          var url = airtab.host();
+          chrome.tabs.create({url:url});
+        }
+    }
+
+    // First test the connection, this should be quick if the server is running.
+    var elem = $('#message');
+    elem.text('Connecting...');
+    elem.attr('class', '');
+    elem.show();
+    airtab.test(function(data) {
+      var message;
+      if (data.succeed) {
+        elem.attr('class', 'success');
+        message = 'successfully connected to the server';
+        elem.text(message).delay(3000).fadeOut(500);
+        start();
+      } else {
+        elem.attr('class', 'fail');
+        message = 'successfully connected to the server';
+        message = data.message + ': could not connect to the server.';
+        elem.text(message);
+
+        var url = chrome.extension.getURL("options.html");
+        var link = $('<a href="' + url + '">');
+        link.text(' check the settings and try again');
+        link.click(function(e) {  
+          e.preventDefault();
+          chrome.tabs.create({'url': 'options.html'});
+          return false;
         });
+        elem.append(link);
       }
-      var remote = document.getElementById("remote");
-      remote.onclick = function() {
-        var url = airtab.host() + "/remote.html";
-        chrome.tabs.create({url: url});
-      }
-      var links = document.getElementById("recent");
-      links.onclick = function() {
-        var url = airtab.host();
-        chrome.tabs.create({url:url});
-      }
+    }); 
     </script>
 </body>
 </html>

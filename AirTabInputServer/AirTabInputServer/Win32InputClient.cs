@@ -204,7 +204,7 @@ namespace AirTabInputServer
                         {
                             System.IO.File.Move(tempFile, savedFile);
                         }
-                        return savedFile;
+                        return dir + System.IO.Path.DirectorySeparatorChar + Environment.NewLine + "screen" + i + ".jpg";
                     }
                     catch (Exception e)
                     {
@@ -213,7 +213,7 @@ namespace AirTabInputServer
                 }
             }
 
-            return dir + System.IO.Path.DirectorySeparatorChar + "failed.png";
+            return "FAILED" + Environment.NewLine + "FAILED";
         }
 
         public void ResetScreenSaver() 

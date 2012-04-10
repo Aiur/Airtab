@@ -11,7 +11,6 @@ app.listen(8090);
 // bootstrap
 app.use('/bootstrap', express.static(__dirname + '/bootstrap'));
 app.use('/chrome_app', express.static(__dirname + '/chrome_app'));
-app.use('/screenshots', express.static(__dirname + '/screenshots'));
 app.use('/', express.static(__dirname + '/'));
 app.use(express.bodyParser());
 
@@ -101,6 +100,8 @@ app.post('/newUrl', function(req, res) {
   res.send({'status': 'ok'});
 });
 
+var setSSDir = false;
+
 io.sockets.on('connection', function (socket) {
   socket.on('newUrl', function (data) {
     console.log(data);
@@ -157,7 +158,20 @@ io.sockets.on('connection', function (socket) {
     function myHandler(output) {
       if(output.indexOf("==screenshot==" >= 0)) {
         var parts = output.split(LINE_ENDING);
-        socket.emit("screenshot", {url: "/" + parts[1].replace("\\", "/") });
+        
+        if (parts[1] == "FAILED" || parts[2] == "FAILED") {
+          socket.emit("screenshot", {url: "/failed.png" });
+        } else {
+          // the screenshot command returns the absolute path it set up
+          // we convert it here to a URL
+          if (!setSSDir) {
+            app.use('/screenshots', express.static(parts[1]));
+            setSSDir = true;
+          }
+
+          socket.emit("screenshot", {url: "/screenshots/" + parts[2] });
+        }
+        
         outputHandlers.splice(outputHandlers.indexOf(myHandler), 1);
       }
     }

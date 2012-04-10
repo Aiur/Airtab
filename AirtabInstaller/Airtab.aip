@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="9.0" version="9.0" Modules="simple" RootPath="." Language="en" Id="{192E0B3B-1A48-45BE-81DD-D42144FE666C}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="9.0" version="9.0.1" Modules="simple" RootPath="." Language="en" Id="{192E0B3B-1A48-45BE-81DD-D42144FE666C}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_MINDOTNETVERSION" MultiBuildValue="DefaultBuild:4.0" ValueLocId="-"/>
     <ROW Property="ALLUSERS" Value="2"/>
     <ROW Property="ARPCOMMENTS" Value="This installer contains the Airtab Server" ValueLocId="*"/>
-    <ROW Property="ARPHELPLINK" Value="https://github.com/prashantv/Airtab"/>
+    <ROW Property="ARPHELPLINK" Value="https://github.com/Aiur/Airtab"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPPRODUCTICON" Value="Actionstabnew.exe" Type="8"/>
-    <ROW Property="ARPURLINFOABOUT" Value="https://github.com/prashantv/Airtab"/>
-    <ROW Property="ARPURLUPDATEINFO" Value="https://github.com/prashantv/Airtab"/>
+    <ROW Property="ARPURLINFOABOUT" Value="https://github.com/Aiur/Airtab"/>
+    <ROW Property="ARPURLUPDATEINFO" Value="https://github.com/Aiur/Airtab"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="Manufacturer" Value="P&amp;C Co" ValueLocId="*"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:v"/>
-    <ROW Property="ProductCode" Value="1033:{7EDF0CC5-6F4D-48BA-B7B2-38BAA17A2F06} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{CF92448F-BA65-4B53-A0FF-6AD5E7B6EE9B} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Airtab Server" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="0.1.0"/>
+    <ROW Property="ProductVersion" Value="0.2.0"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{DA57333D-D7A2-4091-AA6C-E37CED18E871}"/>
@@ -132,7 +132,6 @@
     <ROW Directory="routes_Dir" Directory_Parent="foo_Dir" DefaultDir="routes"/>
     <ROW Directory="rpushblpop_Dir" Directory_Parent="stress_Dir" DefaultDir="rpushb~1|rpushblpop"/>
     <ROW Directory="rsa_Dir" Directory_Parent="crypto_Dir" DefaultDir="rsa"/>
-    <ROW Directory="screenshots_Dir" Directory_Parent="APPDIR" DefaultDir="screen~1|screenshots"/>
     <ROW Directory="serverstats_Dir" Directory_Parent="examples_4_Dir" DefaultDir="server~1|serverstats"/>
     <ROW Directory="session_Dir" Directory_Parent="middleware_Dir" DefaultDir="session"/>
     <ROW Directory="simple_Dir" Directory_Parent="legacy_Dir" DefaultDir="simple"/>
@@ -192,7 +191,7 @@
     <ROW Component="AESKeyTest.as" ComponentId="{99112BDB-7416-4609-BDF4-959DD3F1F065}" Directory_="tests_2_Dir" Attributes="0" KeyPath="AESKeyTest.as" Type="0"/>
     <ROW Component="ARC4.as" ComponentId="{BBEC6A3F-A98B-46D5-843E-8F3BA98CAE68}" Directory_="prng_Dir" Attributes="0" KeyPath="ARC4.as" Type="0"/>
     <ROW Component="AirTabInputServer.exe" ComponentId="{89EC43A9-42B5-4381-9EF1-DD2FA85B4071}" Directory_="APPDIR" Attributes="0" KeyPath="AirTabInputServer.exe"/>
-    <ROW Component="AirTabInputServer.exe.config" ComponentId="{7CEE18FB-A5F4-46F6-B89A-F0AB1C04CEAB}" Directory_="APPDIR" Attributes="0" KeyPath="AirTabInputServer.exe.config" Type="0"/>
+    <ROW Component="AirTabInputServer.exe.config" ComponentId="{7CEE18FB-A5F4-46F6-B89A-F0AB1C04CEAB}" Directory_="APPDIR" Attributes="0" KeyPath="airtab.crx" Type="0"/>
     <ROW Component="ArrayUtil.as" ComponentId="{130F3377-5E46-4F90-91E7-6D622BC4FA61}" Directory_="util_Dir" Attributes="0" KeyPath="ArrayUtil.as" Type="0"/>
     <ROW Component="BarrettReduction.as" ComponentId="{549D5D28-8213-4E46-AACB-9226CE180E77}" Directory_="math_Dir" Attributes="0" KeyPath="BarrettReduction.as" Type="0"/>
     <ROW Component="BufferPool.js" ComponentId="{7CBAC647-3DD2-43D5-99D4-43A974803D49}" Directory_="lib_9_Dir" Attributes="0" KeyPath="BufferPool.js" Type="0"/>
@@ -253,7 +252,6 @@
     <ROW Component="express" ComponentId="{D3C309B2-07CA-4AFD-8DFE-11D912349F71}" Directory_="bin_Dir" Attributes="0" KeyPath="express" Type="0"/>
     <ROW Component="express.js" ComponentId="{1244C999-F8AA-47D3-B7CE-92673129F1A9}" Directory_="lib_Dir" Attributes="0" KeyPath="express.js" Type="0"/>
     <ROW Component="express_1" ComponentId="{116EC2E4-1640-4F12-B914-7E9BE28276C5}" Directory_="bin_1_Dir" Attributes="0" KeyPath="express_1" Type="0"/>
-    <ROW Component="failed.png" ComponentId="{06401827-B4EF-430B-9F1B-4EB06F630178}" Directory_="screenshots_Dir" Attributes="0" KeyPath="failed.png" Type="0"/>
     <ROW Component="flashsocket.js" ComponentId="{F2A5C690-F96D-4143-8B01-CACE0C042768}" Directory_="transports_Dir" Attributes="0" KeyPath="flashsocket.js" Type="0"/>
     <ROW Component="flashsocket.js_1" ComponentId="{9F92D5DE-0278-4433-88D2-C90C1CED48C8}" Directory_="transports_1_Dir" Attributes="0" KeyPath="flashsocket.js_1" Type="0"/>
     <ROW Component="funkyfilename.txt" ComponentId="{7F37E10E-BE07-4693-A85F-55E93D69EAE5}" Directory_="file_Dir" Attributes="0" KeyPath="funkyfilename.txt" Type="0"/>
@@ -330,7 +328,7 @@
     <ROW Component="wscat" ComponentId="{99109BF9-F4D8-45C2-8964-5F68D2D336E4}" Directory_="bin_5_Dir" Attributes="0" KeyPath="wscat_1" Type="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AESKey.as AESKeyTest.as ARC4.as AirTabInputServer.exe AirTabInputServer.exe.config ArrayUtil.as BarrettReduction.as BufferPool.js BulkCiphers.as ByteString.as Crypto.as HMAC.as LICENSE LICENSE_1 MD5.as MozillaRootCertificates.as ProductInformation RFC2817Socket.as RSAKey.as SHORTCUTDIR _ airtab.cmd app.js app.js_1 app.js_2 app.js_3 array1.js array1.js_1 auth.js autobahnserver.js autotest.watchr basic.fallback.js basicAuth.js beautify.js benchmultipartparser.js bootstrap.css bootstrap.js buffer_bench.js bufferutil.cc bufferutil.js build.sh builder.common.js builder.js cache.js certificate.pem changelog.md chmod.js client.js clientunix.js codec.js collection.js commander.js commands.js common.js common.js.un cookie.js decode.bench.js default.js directory.html empty events.js events.test.js express express.js express_1 failed.png flashsocket.js flashsocket.js_1 funkyfilename.txt generic.http.un gitignore.orig gitignore.un gitmodules glyphiconshalflingswhite.png hiredis.js incoming_form.js.un index.html index.html_1 index.jade index.jade_1 index.js index.js_1 info.md js memory.js mime.types mixins.styl mocha.opts multipart.js node.exe nofilename.js.un npmignore npmignore_1 npmignore_10 npmignore_11 npmignore_2 npmignore_3 npmignore_4 npmignore_5 npmignore_6 npmignore_7 npmignore_8 npmignore_9 objectast.js options.js options.test.js package.json page.html page.png parser.benchmark.js partial.js post.js pow.js pub.js pub.js_1 querystring.js record.js scripts.js server.js socket.io.js ssl.crt style.css style.styl test.conf test.txt testbasic.js testconstants.js testfixtures.js.un testincomingform.js.un testincomingform.js.un_1 testmailfixture.js.un testmultipartparser.js testmultivideoupload.js.un travis.yml.un uglifyjs uglifyjs_1 unit.test.js websocket.js ws.md wscat"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AESKey.as AESKeyTest.as ARC4.as AirTabInputServer.exe AirTabInputServer.exe.config ArrayUtil.as BarrettReduction.as BufferPool.js BulkCiphers.as ByteString.as Crypto.as HMAC.as LICENSE LICENSE_1 MD5.as MozillaRootCertificates.as ProductInformation RFC2817Socket.as RSAKey.as SHORTCUTDIR _ airtab.cmd app.js app.js_1 app.js_2 app.js_3 array1.js array1.js_1 auth.js autobahnserver.js autotest.watchr basic.fallback.js basicAuth.js beautify.js benchmultipartparser.js bootstrap.css bootstrap.js buffer_bench.js bufferutil.cc bufferutil.js build.sh builder.common.js builder.js cache.js certificate.pem changelog.md chmod.js client.js clientunix.js codec.js collection.js commander.js commands.js common.js common.js.un cookie.js decode.bench.js default.js directory.html empty events.js events.test.js express express.js express_1 flashsocket.js flashsocket.js_1 funkyfilename.txt generic.http.un gitignore.orig gitignore.un gitmodules glyphiconshalflingswhite.png hiredis.js incoming_form.js.un index.html index.html_1 index.jade index.jade_1 index.js index.js_1 info.md js memory.js mime.types mixins.styl mocha.opts multipart.js node.exe nofilename.js.un npmignore npmignore_1 npmignore_10 npmignore_11 npmignore_2 npmignore_3 npmignore_4 npmignore_5 npmignore_6 npmignore_7 npmignore_8 npmignore_9 objectast.js options.js options.test.js package.json page.html page.png parser.benchmark.js partial.js post.js pow.js pub.js pub.js_1 querystring.js record.js scripts.js server.js socket.io.js ssl.crt style.css style.styl test.conf test.txt testbasic.js testconstants.js testfixtures.js.un testincomingform.js.un testincomingform.js.un_1 testmailfixture.js.un testmultipartparser.js testmultivideoupload.js.un travis.yml.un uglifyjs uglifyjs_1 unit.test.js websocket.js ws.md wscat"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
@@ -338,8 +336,7 @@
     <ROW File="AESKeyTest.as" Component_="AESKeyTest.as" FileName="AESKey~1.as|AESKeyTest.as" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\crypto\tests\AESKeyTest.as" SelfReg="false" NextFile="ARC4Test.as"/>
     <ROW File="ARC4.as" Component_="ARC4.as" FileName="ARC4.as" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\crypto\prng\ARC4.as" SelfReg="false" NextFile="IPRNG.as"/>
     <ROW File="ARC4Test.as" Component_="AESKeyTest.as" FileName="ARC4Test.as" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\crypto\tests\ARC4Test.as" SelfReg="false" NextFile="BigIntegerTest.as"/>
-    <ROW File="AirTabInputServer.exe" Component_="AirTabInputServer.exe" FileName="AirTab~1.exe|AirTabInputServer.exe" Attributes="0" SourcePath="..\server\AirTabInputServer.exe" SelfReg="false" NextFile="AirTabInputServer.exe.config"/>
-    <ROW File="AirTabInputServer.exe.config" Component_="AirTabInputServer.exe.config" FileName="AirTab~1.con|AirTabInputServer.exe.config" Attributes="0" SourcePath="..\server\AirTabInputServer.exe.config" SelfReg="false" NextFile="client.js"/>
+    <ROW File="AirTabInputServer.exe" Component_="AirTabInputServer.exe" FileName="AirTab~1.exe|AirTabInputServer.exe" Attributes="0" SourcePath="..\server\AirTabInputServer.exe" SelfReg="false" NextFile="client.js"/>
     <ROW File="ArrayUtil.as" Component_="ArrayUtil.as" FileName="ArrayU~1.as|ArrayUtil.as" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\util\ArrayUtil.as" SelfReg="false" NextFile="Base64.as"/>
     <ROW File="BarrettReduction.as" Component_="BarrettReduction.as" FileName="Barret~1.as|BarrettReduction.as" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\math\BarrettReduction.as" SelfReg="false" NextFile="BigInteger.as"/>
     <ROW File="Base64.as" Component_="ArrayUtil.as" FileName="Base64.as" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\util\Base64.as" SelfReg="false" NextFile="ByteString.as"/>
@@ -522,7 +519,7 @@
     <ROW File="ZeParser.js" Component_="npmignore_6" FileName="ZeParser.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\node_modules\active-x-obfuscator\node_modules\zeparser\ZeParser.js" SelfReg="false" NextFile="package.json_12"/>
     <ROW File="_" Component_="_" FileName="00" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\redis\tests\stress\speed\00" SelfReg="false" NextFile="plot"/>
     <ROW File="aeskey.pl" Component_="AESKey.as" FileName="aeskey.pl" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\lib\vendor\web-socket-js\flash-src\com\hurlant\crypto\symmetric\aeskey.pl" SelfReg="false" NextFile="BlowFishKey.as"/>
-    <ROW File="airtab.cmd" Component_="airtab.cmd" FileName="airtab.cmd" Attributes="0" SourcePath="airtab.cmd" SelfReg="false" NextFile="failed.png"/>
+    <ROW File="airtab.cmd" Component_="airtab.cmd" FileName="airtab.cmd" Attributes="0" SourcePath="airtab.cmd" SelfReg="false" NextFile="bootstrap.css"/>
     <ROW File="airtab.crx" Component_="AirTabInputServer.exe.config" FileName="airtab.crx" Attributes="0" SourcePath="..\server\airtab.crx" SelfReg="false" NextFile="jquery.js"/>
     <ROW File="app.js" Component_="app.js" FileName="app.js" Attributes="0" SourcePath="..\server\node_modules\express\testing\foo\app.js" SelfReg="false" NextFile="package.json_6"/>
     <ROW File="app.js_1" Component_="app.js_1" FileName="app.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\examples\chat\app.js" SelfReg="false" NextFile="index.jade_2"/>
@@ -613,7 +610,7 @@
     <ROW File="express.js" Component_="express.js" FileName="express.js" Attributes="0" SourcePath="..\server\node_modules\express\lib\express.js" SelfReg="false" NextFile="http.js"/>
     <ROW File="express_1" Component_="express_1" FileName="express" Attributes="0" SourcePath="..\server\node_modules\express\bin\express" SelfReg="false" NextFile="History.md"/>
     <ROW File="extend.js" Component_="auth.js" FileName="extend.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\redis\examples\extend.js" SelfReg="false" NextFile="file.js_1"/>
-    <ROW File="failed.png" Component_="failed.png" FileName="failed.png" Attributes="0" SourcePath="..\server\screenshots\failed.png" SelfReg="false" NextFile="bootstrap.css"/>
+    <ROW File="failed.png" Component_="AirTabInputServer.exe.config" FileName="failed.png" Attributes="0" SourcePath="..\server\failed.png" SelfReg="false"/>
     <ROW File="favicon.ico" Component_="directory.html" FileName="favicon.ico" Attributes="0" SourcePath="..\server\node_modules\express\node_modules\connect\lib\public\favicon.ico" SelfReg="false" NextFile="page.png"/>
     <ROW File="favicon.js" Component_="basicAuth.js" FileName="favicon.js" Attributes="0" SourcePath="..\server\node_modules\express\node_modules\connect\lib\middleware\favicon.js" SelfReg="false" NextFile="limit.js"/>
     <ROW File="file.js" Component_="incoming_form.js.un" FileName="file.js" Attributes="0" SourcePath="..\server\node_modules\express\node_modules\connect\node_modules\formidable\lib\file.js" SelfReg="false" NextFile="incoming_form.js"/>
@@ -1027,7 +1024,7 @@
     <ROW File="testserverclose.js" Component_="testbasic.js" FileName="test-s~1.js|test-server-close.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\support\node-websocket-client\test\test-server-close.js" SelfReg="false" NextFile="testunixsendfd.js"/>
     <ROW File="testtokenizer.html" Component_="npmignore_6" FileName="test-t~1.htm|test-tokenizer.html" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\node_modules\active-x-obfuscator\node_modules\zeparser\test-tokenizer.html" SelfReg="false" NextFile="tests.js"/>
     <ROW File="testunixsendfd.js" Component_="testbasic.js" FileName="test-u~1.js|test-unix-send-fd.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\support\node-websocket-client\test\test-unix-send-fd.js" SelfReg="false" NextFile="testunixsockets.js"/>
-    <ROW File="testunixsockets.js" Component_="testbasic.js" FileName="test-u~2.js|test-unix-sockets.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\support\node-websocket-client\test\test-unix-sockets.js" SelfReg="false"/>
+    <ROW File="testunixsockets.js" Component_="testbasic.js" FileName="test-u~2.js|test-unix-sockets.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\support\node-websocket-client\test\test-unix-sockets.js" SelfReg="false" NextFile="failed.png"/>
     <ROW File="textfile" Component_="certificate.pem" FileName="textfile" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\socket.io-client\node_modules\ws\test\fixtures\textfile" SelfReg="false" NextFile="hybicommon.js"/>
     <ROW File="to_array.js" Component_="commands.js" FileName="to_array.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\node_modules\redis\lib\to_array.js" SelfReg="false" NextFile="util.js_2"/>
     <ROW File="transport.js" Component_="client.js" FileName="transp~1.js|transport.js" Attributes="0" SourcePath="..\server\node_modules\socket.io\lib\transport.js" SelfReg="false" NextFile="flashsocket.js"/>

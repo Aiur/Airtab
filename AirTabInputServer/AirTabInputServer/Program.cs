@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.IO;
 
 namespace AirTabInputServer
 {
@@ -8,11 +9,22 @@ namespace AirTabInputServer
     {
         static List<string> s_events = new List<string>();
         const int MAX_EVENTS_HISTORY = 1000;
+        static string APPPATH;
 
         static void Main(string[] args)
         {
             try
             {
+                // Set the path to the app data folder so we save logs + screenshots there
+                APPPATH = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Airtab");
+
+                if (!Directory.Exists(APPPATH))
+                {
+                    Directory.CreateDirectory(APPPATH);
+                }
+
+                Directory.SetCurrentDirectory(APPPATH);
+
                 InputClient client = new Win32InputClient();
                 InputServer(client);
             }
@@ -165,7 +177,7 @@ namespace AirTabInputServer
                             ThreadPool.QueueUserWorkItem(o =>
                             {
                                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-                                string filename = client.Screenshot(parts[1], sWidth, sHeight);
+                                string filename = APPPATH + System.IO.Path.DirectorySeparatorChar + client.Screenshot(parts[1], sWidth, sHeight);
                                 Console.WriteLine("==screenshot==");
                                 Console.WriteLine(filename);
                                 Console.WriteLine("<><>");

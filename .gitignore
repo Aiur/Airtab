@@ -10,3 +10,4 @@ AirtabInputServer/*/obj/
 *.pem
 node_modules
 *.pdb
+*xcuserdata

@@ -1,0 +1,209 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		36766D01152AEB120013F05C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 36766D00152AEB120013F05C /* main.c */; };
+		36766D03152AEB120013F05C /* AirtabOSXInputServer.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36766D02152AEB120013F05C /* AirtabOSXInputServer.1 */; };
+		36766D0A152AFD120013F05C /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36766D09152AFD120013F05C /* ApplicationServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		36766CFA152AEB120013F05C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				36766D03152AEB120013F05C /* AirtabOSXInputServer.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		36766CFC152AEB120013F05C /* AirtabOSXInputServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AirtabOSXInputServer; sourceTree = BUILT_PRODUCTS_DIR; };
+		36766D00152AEB120013F05C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		36766D02152AEB120013F05C /* AirtabOSXInputServer.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = AirtabOSXInputServer.1; sourceTree = "<group>"; };
+		36766D09152AFD120013F05C /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		36766CF9152AEB120013F05C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36766D0A152AFD120013F05C /* ApplicationServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		36766CF1152AEB110013F05C = {
+			isa = PBXGroup;
+			children = (
+				36766D09152AFD120013F05C /* ApplicationServices.framework */,
+				36766CFF152AEB120013F05C /* AirtabOSXInputServer */,
+				36766CFD152AEB120013F05C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		36766CFD152AEB120013F05C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				36766CFC152AEB120013F05C /* AirtabOSXInputServer */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		36766CFF152AEB120013F05C /* AirtabOSXInputServer */ = {
+			isa = PBXGroup;
+			children = (
+				36766D00152AEB120013F05C /* main.c */,
+				36766D02152AEB120013F05C /* AirtabOSXInputServer.1 */,
+			);
+			path = AirtabOSXInputServer;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		36766CFB152AEB120013F05C /* AirtabOSXInputServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36766D06152AEB120013F05C /* Build configuration list for PBXNativeTarget "AirtabOSXInputServer" */;
+			buildPhases = (
+				36766CF8152AEB120013F05C /* Sources */,
+				36766CF9152AEB120013F05C /* Frameworks */,
+				36766CFA152AEB120013F05C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirtabOSXInputServer;
+			productName = AirtabOSXInputServer;
+			productReference = 36766CFC152AEB120013F05C /* AirtabOSXInputServer */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		36766CF3152AEB110013F05C /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 36766CF6152AEB110013F05C /* Build configuration list for PBXProject "AirtabOSXInputServer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 36766CF1152AEB110013F05C;
+			productRefGroup = 36766CFD152AEB120013F05C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				36766CFB152AEB120013F05C /* AirtabOSXInputServer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		36766CF8152AEB120013F05C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36766D01152AEB120013F05C /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		36766D04152AEB120013F05C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		36766D05152AEB120013F05C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		36766D07152AEB120013F05C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		36766D08152AEB120013F05C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		36766CF6152AEB110013F05C /* Build configuration list for PBXProject "AirtabOSXInputServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36766D04152AEB120013F05C /* Debug */,
+				36766D05152AEB120013F05C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		36766D06152AEB120013F05C /* Build configuration list for PBXNativeTarget "AirtabOSXInputServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36766D07152AEB120013F05C /* Debug */,
+				36766D08152AEB120013F05C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 36766CF3152AEB110013F05C /* Project object */;
+}

@@ -1,7 +1,7 @@
 {
   "name": "Airtab",
   "version": "1.0",
-  "description": "Send shit to our desktop",
+  "description": "Control your HTPC from chrome",
   "browser_action": {
     "default_icon": "icon.png",
     "popup": "popup.html"
@@ -10,7 +10,7 @@
     "contextMenus",
     "tabs",
     "notifications",
-    "http://192.168.*/*"
+    "http://*/*"
   ],
   "icons": {
     "16": "icon.png"

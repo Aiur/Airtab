@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Airtab Remote [beta] : Control your media PC from a browser" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Airtab Remote [beta]</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Aiur/Airtab">View on GitHub</a>
+
+          <h1 id="project_title">Airtab Remote [beta]</h1>
+          <h2 id="project_tagline">Control your media PC from a browser</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Aiur/Airtab/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Aiur/Airtab/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>What is Airtab Remote and who is it for?</h3>
+
+<p>Airtab remote allows you to control your Media PC over a LAN. If you're like us, you're on your laptop or tablet all the time, even when sitting in front of a TV, and if you also have a media PC, why use another keyboard when you could just open a tab in your browser and use the keyboard, mouse or touchpad you already have in front of you?</p>
+
+<h3>Getting Started (easy)</h3>
+
+<ol>
+<li>Download our <a href="https://github.com/Aiur/Airtab/downloads">installer</a> and install it on your Windows media PC</li>
+<li>Right click on on the Airtab server icon on your desktop and select "run as Administrator". The server uses Nodejs, so allow that process to listen on port 8090 on your firewall if you have a firewall running.</li>
+<li>On another computer, open browser and hit the IP of your media PC on port 8090, e.g. <a href="http://192.168.1.5:8090">http://192.168.1.5:8090</a>
+</li>
+<li>Put your wireless keyboard and mouse away. </li>
+</ol><h3>I'm a developer and I want to help</h3>
+
+<p>That's great! We're happy to accept contributions, just fork it on github. Airtab was built using <a href="http://nodejs.org">nodejs</a>, <a href="http://socket.io">socket.io</a> and <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/express">C# .Net</a>. </p>
+
+<h3>It doesn't work :(</h3>
+
+<p>This is an early beta version of Airtab. We've only tested it on Windows 7 as a server because that's what we use. Let us know by creating an <a href="https://github.com/Aiur/Airtab/issues">issue</a> on github for bug reports or feature requests. </p>
+
+<h3>Does it work on my Mac or Linux computer?</h3>
+
+<p>The server (media PC component) only works on Windows 7 or higher at the moment, but the client can be run from anywhere (we Mac OSX with Chrome most of the time). We recommend Chrome since we've made a chrome extension for convenience.</p>
+
+<h3>Known issues</h3>
+
+<ol>
+<li>Unless you run the server as an Administrator, Airtab will not work when you're performing administrative tasks, like using the task manager or installing programs.</li>
+<li>It doesn't work for the log in screen, not even when it's running as Administrator. Windows has a log of security that makes this really hard, and we haven't figured out how to get around that yet. </li>
+</ol>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Airtab Remote [beta] maintained by <a href="https://github.com/Aiur">Aiur</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("var _gaq = _gaq || [];   _gaq.push(['_setAccount', 'UA-30721480-1']);   _gaq.push(['_setDomainName', 'github.com']);   _gaq.push(['_setAllowLinker', true]);   _gaq.push(['_trackPageview']);    (function() {     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);   })();");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
